@@ -307,6 +307,185 @@
       nav button { font-size: .78rem; padding: .45rem .75rem; }
       .calc-form  { padding: 1rem; }
     }
+
+    /* ================================================================
+       SECCIÓN 0 – ENTRADA LIBRE (estilo Wolfram Alpha)
+       ================================================================ */
+    #sec0 {
+      background: #12122b;
+      border-radius: 16px;
+      padding: 2rem 1.8rem 2.4rem;
+      color: #dde0ff;
+      box-shadow: 0 4px 24px rgba(0,0,0,.45);
+    }
+
+    .wa-header { margin-bottom: 1.5rem; text-align: center; }
+    .wa-header h2 { font-size: 1.6rem; color: #b39dff; letter-spacing: .03em; }
+    .wa-header p  { font-size: .9rem; color: #8888bb; margin-top: .3rem; }
+
+    /* --- Preview strip --- */
+    .wa-preview {
+      min-height: 52px;
+      background: #0e0e24;
+      border: 1.5px solid #3d2b7a;
+      border-radius: 10px 10px 0 0;
+      padding: .6rem 1.2rem;
+      text-align: center;
+      font-size: 1.15rem;
+      color: #ccccff;
+      overflow-x: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .wa-preview .katex-display { margin: 0; }
+
+    /* --- Input row --- */
+    .wa-input-row {
+      display: flex;
+      gap: .5rem;
+      align-items: stretch;
+      margin-bottom: 1.6rem;
+    }
+
+    #wa-input {
+      flex: 1;
+      background: #1a1a3e;
+      color: #e0e0ff;
+      border: 2px solid #5c35c5;
+      border-radius: 0 0 10px 10px;
+      padding: .7rem 1rem;
+      font-size: 1rem;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      transition: border-color .2s;
+    }
+    #wa-input:focus { border-color: #9c6dff; }
+    #wa-input::placeholder { color: #5555aa; }
+
+    .wa-go-btn {
+      background: linear-gradient(135deg, #6200ea, #aa00ff);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .7rem 1.4rem;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity .2s, transform .1s;
+      white-space: nowrap;
+    }
+    .wa-go-btn:hover  { opacity: .88; }
+    .wa-go-btn:active { transform: scale(.97); }
+
+    .wa-clear-btn {
+      background: #2a1a4a;
+      color: #b0a0ff;
+      border: 1.5px solid #5c35c5;
+      border-radius: 8px;
+      padding: .7rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .wa-clear-btn:hover { background: #3d2b7a; }
+
+    /* --- Keyboard --- */
+    .wa-keyboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 1rem;
+    }
+
+    .wa-category {
+      background: #1a1a3a;
+      border: 1px solid #2d1f6a;
+      border-radius: 10px;
+      padding: .8rem;
+    }
+
+    .wa-cat-title {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #7c5fff;
+      margin-bottom: .6rem;
+      padding-bottom: .35rem;
+      border-bottom: 1px solid #2d1f6a;
+    }
+
+    .wa-btn-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+    }
+
+    .wa-btn {
+      background: #2e1f6a;
+      color: #ddd0ff;
+      border: 1px solid #4a35a0;
+      border-radius: 6px;
+      padding: .38rem .55rem;
+      font-size: .82rem;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .wa-btn:hover  { background: #5c35c5; border-color: #9c6dff; color: #fff; }
+    .wa-btn:active { transform: scale(.94); }
+
+    /* --- Result box --- */
+    .wa-result { margin-top: 1.4rem; }
+
+    .wa-result-box {
+      background: #1a1a3e;
+      border: 1.5px solid #5c35c5;
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      color: #ddd0ff;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+    .wa-result-box.wa-warn {
+      border-color: #ffc107;
+      background: #2a2010;
+      color: #ffd54f;
+    }
+    .wa-result-box.wa-error {
+      border-color: #e53935;
+      background: #2a1010;
+      color: #ef9a9a;
+    }
+    .wa-result-label {
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #7c5fff;
+      margin-bottom: .5rem;
+    }
+    .wa-result-math {
+      font-size: 1.1rem;
+      text-align: center;
+      padding: .4rem 0;
+      overflow-x: auto;
+    }
+    .wa-result-text {
+      font-size: .85rem;
+      font-family: 'Courier New', monospace;
+      color: #9c9cdd;
+      margin-top: .4rem;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .wa-keyboard { grid-template-columns: 1fr 1fr; }
+      #sec0 { padding: 1.2rem 1rem; }
+      .wa-input-row { flex-wrap: wrap; }
+      #wa-input { border-radius: 0 0 10px 10px; width: 100%; }
+    }
   </style>
 </head>
 <body>
@@ -319,7 +498,8 @@
 
 <!-- ==================== NAVEGACIÓN ==================== -->
 <nav>
-  <button class="active" onclick="mostrarSeccion('sec1',this)">1 · Variable Separable</button>
+  <button class="active" onclick="mostrarSeccion('sec0',this)">🔢 Entrada Libre</button>
+  <button onclick="mostrarSeccion('sec1',this)">1 · Variable Separable</button>
   <button onclick="mostrarSeccion('sec2',this)">2 · Homogénea</button>
   <button onclick="mostrarSeccion('sec3',this)">3 · Reducible a Homogénea</button>
   <button onclick="mostrarSeccion('sec4',this)">4 · Exacta</button>
@@ -335,8 +515,162 @@
 <!-- ==================== CONTENIDO ==================== -->
 <main>
 
+  <!-- ===== SECCIÓN 0 – ENTRADA LIBRE (Wolfram Alpha-style) ===== -->
+  <section class="eq-section active" id="sec0">
+    <div class="wa-header">
+      <h2>📐 Entrada de Expresión Matemática</h2>
+      <p>Escribe o usa el teclado de símbolos para ingresar tu ecuación o expresión matemática</p>
+    </div>
+
+    <!-- Vista previa KaTeX -->
+    <div class="wa-preview" id="wa-preview"><em style="color:#4444aa">⟨ tu expresión aparecerá aquí ⟩</em></div>
+
+    <!-- Campo de entrada -->
+    <div class="wa-input-row">
+      <input type="text" id="wa-input" placeholder="Ej: diff(x^3, x)  ó  integrate(sin(x), x)  ó  x^2 + 2*x = 5"
+             autocomplete="off" spellcheck="false"
+             oninput="actualizarPreview()" onkeydown="if(event.key==='Enter')evaluarEntrada()" />
+      <button class="wa-go-btn" onclick="evaluarEntrada()">▶ Evaluar</button>
+      <button class="wa-clear-btn" title="Limpiar" onclick="limpiarEntrada()">✕</button>
+    </div>
+
+    <!-- ===== TECLADO DE SÍMBOLOS ===== -->
+    <div class="wa-keyboard">
+
+      <!-- BÁSICO -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Básico</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('+')">+</button>
+          <button class="wa-btn" onclick="waPush('-')">−</button>
+          <button class="wa-btn" onclick="waPush('*')">×</button>
+          <button class="wa-btn" onclick="waPush('/')">÷</button>
+          <button class="wa-btn" onclick="waPush('^')">^</button>
+          <button class="wa-btn" onclick="waPush('()', 1)">( )</button>
+          <button class="wa-btn" onclick="waPush('[]', 1)">[ ]</button>
+          <button class="wa-btn" onclick="waPush('=')">=</button>
+          <button class="wa-btn" onclick="waPush('!=')">≠</button>
+          <button class="wa-btn" onclick="waPush('<')">&lt;</button>
+          <button class="wa-btn" onclick="waPush('>')">&gt;</button>
+          <button class="wa-btn" onclick="waPush('<=')">≤</button>
+          <button class="wa-btn" onclick="waPush('>=')">≥</button>
+          <button class="wa-btn" onclick="waPush(',')">,</button>
+          <button class="wa-btn" onclick="waPush('!')">!</button>
+        </div>
+      </div>
+
+      <!-- CÁLCULO Y SUMAS -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Cálculo y Sumas</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('diff(, x)', 5)">d/dx</button>
+          <button class="wa-btn" onclick="waPush('diff(, x, 2)', 5)">d²/dx²</button>
+          <button class="wa-btn" onclick="waPush('diff(, x, n)', 5)">dⁿ/dxⁿ</button>
+          <button class="wa-btn" onclick="waPush('diff(, y)', 5)">∂/∂y</button>
+          <button class="wa-btn" onclick="waPush('integrate(, x)', 10)">∫ dx</button>
+          <button class="wa-btn" onclick="waPush('integrate(integrate(, x), y)', 10)">∫∫ dA</button>
+          <button class="wa-btn" onclick="waPush('lim')">lim</button>
+          <button class="wa-btn" onclick="waPush('sum(, x, 0, n)', 4)">∑</button>
+          <button class="wa-btn" onclick="waPush('product(, x, 1, n)', 8)">∏</button>
+        </div>
+      </div>
+
+      <!-- ÁLGEBRA -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Álgebra</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('^2')">x²</button>
+          <button class="wa-btn" onclick="waPush('^3')">x³</button>
+          <button class="wa-btn" onclick="waPush('^()', 2)">xⁿ</button>
+          <button class="wa-btn" onclick="waPush('()/()' , 1)">a/b</button>
+          <button class="wa-btn" onclick="waPush('sqrt()', 5)">√x</button>
+          <button class="wa-btn" onclick="waPush('cbrt()', 5)">∛x</button>
+          <button class="wa-btn" onclick="waPush('nthroot(, n)', 8)">ⁿ√x</button>
+          <button class="wa-btn" onclick="waPush('abs()', 4)">|x|</button>
+          <button class="wa-btn" onclick="waPush('floor()', 6)">⌊x⌋</button>
+          <button class="wa-btn" onclick="waPush('ceil()', 5)">⌈x⌉</button>
+        </div>
+      </div>
+
+      <!-- TRIGONOMETRÍA -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Trigonometría</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('sin()', 4)">sin</button>
+          <button class="wa-btn" onclick="waPush('cos()', 4)">cos</button>
+          <button class="wa-btn" onclick="waPush('tan()', 4)">tan</button>
+          <button class="wa-btn" onclick="waPush('csc()', 4)">csc</button>
+          <button class="wa-btn" onclick="waPush('sec()', 4)">sec</button>
+          <button class="wa-btn" onclick="waPush('cot()', 4)">cot</button>
+          <button class="wa-btn" onclick="waPush('asin()', 5)">arcsin</button>
+          <button class="wa-btn" onclick="waPush('acos()', 5)">arccos</button>
+          <button class="wa-btn" onclick="waPush('atan()', 5)">arctan</button>
+          <button class="wa-btn" onclick="waPush('sinh()', 5)">sinh</button>
+          <button class="wa-btn" onclick="waPush('cosh()', 5)">cosh</button>
+          <button class="wa-btn" onclick="waPush('tanh()', 5)">tanh</button>
+        </div>
+      </div>
+
+      <!-- FUNCIONES -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Funciones</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('log()', 4)">ln</button>
+          <button class="wa-btn" onclick="waPush('log(, 10)', 4)">log₁₀</button>
+          <button class="wa-btn" onclick="waPush('log(, b)', 4)">logₐ</button>
+          <button class="wa-btn" onclick="waPush('exp()', 4)">eˣ</button>
+          <button class="wa-btn" onclick="waPush('expand()', 7)">expandir</button>
+          <button class="wa-btn" onclick="waPush('simplify()', 9)">simplificar</button>
+          <button class="wa-btn" onclick="waPush('factor()', 7)">factorizar</button>
+          <button class="wa-btn" onclick="waPush('solve(, x)', 6)">resolver</button>
+          <button class="wa-btn" onclick="waPush('max(, )', 4)">máx</button>
+          <button class="wa-btn" onclick="waPush('min(, )', 4)">mín</button>
+        </div>
+      </div>
+
+      <!-- CONSTANTES Y LETRAS -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Constantes y Letras</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('pi')">π</button>
+          <button class="wa-btn" onclick="waPush('e')">e</button>
+          <button class="wa-btn" onclick="waPush('i')">i</button>
+          <button class="wa-btn" onclick="waPush('Infinity')">∞</button>
+          <button class="wa-btn" onclick="waPush('(1+sqrt(5))/2')">φ</button>
+          <button class="wa-btn" onclick="waPush('x')">x</button>
+          <button class="wa-btn" onclick="waPush('y')">y</button>
+          <button class="wa-btn" onclick="waPush('z')">z</button>
+          <button class="wa-btn" onclick="waPush('t')">t</button>
+          <button class="wa-btn" onclick="waPush('n')">n</button>
+          <button class="wa-btn" onclick="waPush('a')">a</button>
+          <button class="wa-btn" onclick="waPush('b')">b</button>
+        </div>
+      </div>
+
+      <!-- VECTORES Y MATRICES -->
+      <div class="wa-category">
+        <div class="wa-cat-title">Vectores y Matrices</div>
+        <div class="wa-btn-grid">
+          <button class="wa-btn" onclick="waPush('matrix([[], []])', 8)">matriz 2×2</button>
+          <button class="wa-btn" onclick="waPush('matrix([[], [], []])', 8)">matriz 3×?</button>
+          <button class="wa-btn" onclick="waPush('[, ]', 1)">vector [, ]</button>
+          <button class="wa-btn" onclick="waPush('dot(, )', 4)">u · v</button>
+          <button class="wa-btn" onclick="waPush('cross(, )', 6)">u × v</button>
+          <button class="wa-btn" onclick="waPush('transpose()', 10)">transpuesta</button>
+          <button class="wa-btn" onclick="waPush('det()', 4)">det</button>
+          <button class="wa-btn" onclick="waPush('inv()', 4)">inversa</button>
+        </div>
+      </div>
+
+    </div><!-- /wa-keyboard -->
+
+    <!-- Resultado -->
+    <div id="wa-result" class="wa-result"></div>
+
+  </section>
+
   <!-- ===== SECCIÓN 1 – VARIABLE SEPARABLE ===== -->
-  <section class="eq-section active" id="sec1">
+  <section class="eq-section" id="sec1">
     <div class="section-header">
       <div class="section-badge" style="background:#1565c0">1</div>
       <div>
@@ -893,6 +1227,94 @@
     // Intentamos también aquí por si ya cargó.
     renderMath();
   });
+
+  /* ================================================================
+     SECCIÓN 0 – ENTRADA LIBRE (Wolfram Alpha-style)
+     ================================================================ */
+
+  /**
+   * Inserta `text` en el campo de entrada en la posición del cursor.
+   * Si se pasa `cursorOffset`, el cursor queda en start+cursorOffset
+   * (útil para posicionar dentro de paréntesis, ej. "sin()" → 4).
+   */
+  function waPush(text, cursorOffset) {
+    const inp = document.getElementById('wa-input');
+    inp.focus();
+    const start = inp.selectionStart;
+    const end   = inp.selectionEnd;
+    inp.value = inp.value.substring(0, start) + text + inp.value.substring(end);
+    const pos = start + (cursorOffset !== undefined ? cursorOffset : text.length);
+    inp.setSelectionRange(pos, pos);
+    actualizarPreview();
+  }
+
+  function limpiarEntrada() {
+    const inp = document.getElementById('wa-input');
+    inp.value = '';
+    inp.focus();
+    document.getElementById('wa-preview').innerHTML = '<em style="color:#4444aa">⟨ tu expresión aparecerá aquí ⟩</em>';
+    document.getElementById('wa-result').innerHTML  = '';
+  }
+
+  function actualizarPreview() {
+    const val     = document.getElementById('wa-input').value.trim();
+    const preview = document.getElementById('wa-preview');
+    if (!val) {
+      preview.innerHTML = '<em style="color:#4444aa">⟨ tu expresión aparecerá aquí ⟩</em>';
+      return;
+    }
+    let rendered = false;
+    if (typeof nerdamer !== 'undefined') {
+      try {
+        const tex = nerdamer(val).toTeX();
+        if (typeof katex !== 'undefined') {
+          katex.render(tex, preview, { throwOnError: false, displayMode: true });
+          rendered = true;
+        }
+      } catch(e) { /* fall through to plain text */ }
+    }
+    if (!rendered) {
+      if (typeof katex !== 'undefined') {
+        try {
+          katex.render(val, preview, { throwOnError: false, displayMode: true });
+          rendered = true;
+        } catch(e) { /* fall through */ }
+      }
+    }
+    if (!rendered) {
+      preview.textContent = val;
+    }
+  }
+
+  function evaluarEntrada() {
+    const val    = document.getElementById('wa-input').value.trim();
+    const result = document.getElementById('wa-result');
+    if (!val) return;
+
+    if (typeof nerdamer === 'undefined') {
+      result.innerHTML = '<div class="wa-result-box wa-warn">⚠ Las bibliotecas de cálculo simbólico no están cargadas. Conéctate a internet y recarga la página.</div>';
+      return;
+    }
+
+    try {
+      const nd_result = nerdamer(val);
+      const resStr    = nd_result.toString();
+      let   resTex    = '';
+      try { resTex = nd_result.toTeX(); } catch(e) { resTex = resStr; }
+
+      result.innerHTML =
+        `<div class="wa-result-box">` +
+          `<div class="wa-result-label">Resultado</div>` +
+          `<div class="wa-result-math">\\[${resTex}\\]</div>` +
+          `<div class="wa-result-text">${resStr}</div>` +
+        `</div>`;
+      renderMath();
+    } catch(e) {
+      result.innerHTML =
+        `<div class="wa-result-box wa-error">⚠ No se pudo evaluar la expresión.<br>` +
+        `<small>${e.message || String(e)}</small></div>`;
+    }
+  }
 </script>
 </body>
 </html>
