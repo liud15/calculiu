@@ -486,6 +486,195 @@
       .wa-input-row { flex-wrap: wrap; }
       #wa-input { border-radius: 0 0 10px 10px; width: 100%; }
     }
+
+    /* ================================================================
+       SECCIÓN AUTO – IDENTIFICADOR AUTOMÁTICO
+       ================================================================ */
+
+    /* Badge del encabezado */
+    .auto-badge {
+      background: linear-gradient(135deg, #e65100, #f57f17);
+      font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Pills de tipo */
+    .tipo-pill {
+      display: inline-block;
+      border-radius: 1rem;
+      padding: .15rem .65rem;
+      font-size: .76rem;
+      font-weight: 700;
+      color: #fff;
+      margin: .18rem .2rem;
+      vertical-align: middle;
+    }
+    .c-lineal    { background: #880e4f; }
+    .c-separable { background: #1565c0; }
+    .c-exacta    { background: #e65100; }
+    .c-homogenea { background: #6a1b9a; }
+    .c-reducible { background: #00695c; }
+
+    /* Panel de ejemplos */
+    .auto-examples-panel {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 1px 5px rgba(0,0,0,.08);
+    }
+    .auto-examples-title {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: .7rem;
+    }
+    .auto-examples-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .ejemplo-btn {
+      border: none;
+      border-radius: 8px;
+      padding: .42rem .85rem;
+      font-size: .8rem;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .18rem;
+      transition: opacity .2s, transform .1s;
+      text-align: left;
+      line-height: 1.3;
+    }
+    .ejemplo-btn:hover  { opacity: .85; transform: scale(1.03); }
+    .ejemplo-btn .ej-tipo {
+      font-size: .66rem;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 700;
+      letter-spacing: .06em;
+      opacity: .88;
+    }
+    .ej-sep { background: #1565c0; }
+    .ej-hom { background: #6a1b9a; }
+    .ej-red { background: #00695c; }
+    .ej-exa { background: #e65100; }
+    .ej-lin { background: #880e4f; }
+
+    /* Card de entrada */
+    .auto-input-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.09);
+    }
+    .auto-input-row {
+      display: flex;
+      gap: .6rem;
+      align-items: stretch;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+    #auto-input {
+      flex: 1;
+      min-width: 220px;
+      border: 1.5px solid var(--border);
+      border-radius: 7px;
+      padding: .6rem .9rem;
+      font-size: .97rem;
+      font-family: 'Courier New', monospace;
+      outline: none;
+      transition: border-color .2s;
+    }
+    #auto-input:focus { border-color: var(--accent); }
+    .auto-btn { background: linear-gradient(135deg, #e65100, #f57f17) !important; }
+
+    /* Panel de verificación */
+    .auto-checks-panel {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      margin-bottom: 1.2rem;
+    }
+    .auto-checks-panel h3 { margin-bottom: .9rem; font-size: 1rem; color: var(--text); }
+    .checks-list { display: flex; flex-direction: column; gap: .6rem; }
+    .check-item {
+      border-radius: 8px;
+      padding: .6rem .9rem;
+      border-left: 4px solid;
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+    .check-ok  { background: #e8f5e9; border-color: #388e3c; }
+    .check-no  { background: #fafafa; border-color: #ccc; color: #777; }
+    .check-item .check-header { font-weight: 700; margin-bottom: .22rem; }
+    .check-ok  .check-reason  { font-size: .82rem; color: #2e7d32; }
+    .check-no  .check-reason  { font-size: .82rem; color: #999; }
+
+    /* Resultado de tipo */
+    .auto-tipo-result {
+      background: var(--card);
+      border-radius: 12px;
+      border-left: 6px solid;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .tipo-result-badge {
+      display: inline-block;
+      color: #fff;
+      border-radius: 1rem;
+      padding: .22rem .85rem;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: .5rem;
+    }
+    .tipo-result-nombre { font-size: 1.3rem; font-weight: 700; margin-bottom: .4rem; }
+    .tipo-result-explain { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+    /* Solución automática */
+    .auto-solucion {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .auto-solucion h3 { font-size: 1rem; margin-bottom: .9rem; color: var(--text); }
+
+    /* Ejemplos en secciones individuales */
+    .section-examples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-bottom: 1rem;
+      align-items: center;
+    }
+    .section-examples-label {
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--muted);
+      margin-right: .2rem;
+    }
+    .sec-ej-btn {
+      border: 1.5px solid;
+      background: transparent;
+      border-radius: 6px;
+      padding: .28rem .65rem;
+      font-size: .78rem;
+      font-family: 'Courier New', monospace;
+      cursor: pointer;
+      transition: background .18s, color .18s;
+    }
+
+    @media (max-width: 520px) {
+      .auto-input-row { flex-direction: column; }
+      #auto-input { min-width: unset; }
+      .auto-examples-grid { gap: .35rem; }
+    }
   </style>
 </head>
 <body>
@@ -499,6 +688,7 @@
 <!-- ==================== NAVEGACIÓN ==================== -->
 <nav>
   <button class="active" onclick="mostrarSeccion('sec0',this)">🔢 Entrada Libre</button>
+  <button onclick="mostrarSeccion('sec-auto',this)">🔍 Auto-Identificador</button>
   <button onclick="mostrarSeccion('sec1',this)">1 · Variable Separable</button>
   <button onclick="mostrarSeccion('sec2',this)">2 · Homogénea</button>
   <button onclick="mostrarSeccion('sec3',this)">3 · Reducible a Homogénea</button>
@@ -686,6 +876,15 @@
     </div>
 
     <div class="calc-form">
+      <div class="section-examples">
+        <span class="section-examples-label">Ejemplos:</span>
+        <button class="sec-ej-btn" style="border-color:#1565c0;color:#1565c0"
+          onclick="document.getElementById('s1-fx').value='x^2';document.getElementById('s1-gy').value='y'">dy/dx = x²·y</button>
+        <button class="sec-ej-btn" style="border-color:#1565c0;color:#1565c0"
+          onclick="document.getElementById('s1-fx').value='sin(x)';document.getElementById('s1-gy').value='cos(y)'">dy/dx = sin(x)/cos(y)</button>
+        <button class="sec-ej-btn" style="border-color:#1565c0;color:#1565c0"
+          onclick="document.getElementById('s1-fx').value='e^x';document.getElementById('s1-gy').value='y^2'">dy/dx = eˣ/y²</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label>f(x) — función de x (numerador)</label>
@@ -724,6 +923,15 @@
     </div>
 
     <div class="calc-form">
+      <div class="section-examples">
+        <span class="section-examples-label">Ejemplos:</span>
+        <button class="sec-ej-btn" style="border-color:#6a1b9a;color:#6a1b9a"
+          onclick="document.getElementById('s2-M').value='x^2+y^2';document.getElementById('s2-N').value='-2*x*y'">(x²+y²)dx−2xy·dy=0</button>
+        <button class="sec-ej-btn" style="border-color:#6a1b9a;color:#6a1b9a"
+          onclick="document.getElementById('s2-M').value='x+y';document.getElementById('s2-N').value='-x'">(x+y)dx−x·dy=0</button>
+        <button class="sec-ej-btn" style="border-color:#6a1b9a;color:#6a1b9a"
+          onclick="document.getElementById('s2-M').value='x^2-y^2';document.getElementById('s2-N').value='2*x*y'">(x²−y²)dx+2xy·dy=0</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label>M(x, y)</label>
@@ -764,6 +972,15 @@
     </div>
 
     <div class="calc-form">
+      <div class="section-examples">
+        <span class="section-examples-label">Ejemplos:</span>
+        <button class="sec-ej-btn" style="border-color:#00695c;color:#00695c"
+          onclick="setS3(1,-2,3,2,1,-1)">dy/dx=(x−2y+3)/(2x+y−1)</button>
+        <button class="sec-ej-btn" style="border-color:#00695c;color:#00695c"
+          onclick="setS3(2,1,3,1,2,-3)">dy/dx=(2x+y+3)/(x+2y−3)</button>
+        <button class="sec-ej-btn" style="border-color:#00695c;color:#00695c"
+          onclick="setS3(1,1,0,2,2,5)">Δ=0: dy/dx=(x+y)/(2x+2y+5)</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label>a₁ (coef. x en numerador)</label>
@@ -820,6 +1037,15 @@
     </div>
 
     <div class="calc-form">
+      <div class="section-examples">
+        <span class="section-examples-label">Ejemplos:</span>
+        <button class="sec-ej-btn" style="border-color:#e65100;color:#e65100"
+          onclick="document.getElementById('s4-M').value='2*x*y+3';document.getElementById('s4-N').value='x^2+4*y'">(2xy+3)dx+(x²+4y)dy=0</button>
+        <button class="sec-ej-btn" style="border-color:#e65100;color:#e65100"
+          onclick="document.getElementById('s4-M').value='y*cos(x)+2*x';document.getElementById('s4-N').value='sin(x)'">(y·cos x+2x)dx+sin(x)dy=0</button>
+        <button class="sec-ej-btn" style="border-color:#e65100;color:#e65100"
+          onclick="document.getElementById('s4-M').value='3*x^2*y+y^3';document.getElementById('s4-N').value='x^3+3*x*y^2'">(3x²y+y³)dx+(x³+3xy²)dy=0</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label>M(x, y) — coeficiente de dx</label>
@@ -858,6 +1084,15 @@
     </div>
 
     <div class="calc-form">
+      <div class="section-examples">
+        <span class="section-examples-label">Ejemplos:</span>
+        <button class="sec-ej-btn" style="border-color:#880e4f;color:#880e4f"
+          onclick="document.getElementById('s5-P').value='2/x';document.getElementById('s5-Q').value='x^2'">y′+(2/x)y=x²</button>
+        <button class="sec-ej-btn" style="border-color:#880e4f;color:#880e4f"
+          onclick="document.getElementById('s5-P').value='-2';document.getElementById('s5-Q').value='e^x'">y′−2y=eˣ</button>
+        <button class="sec-ej-btn" style="border-color:#880e4f;color:#880e4f"
+          onclick="document.getElementById('s5-P').value='tan(x)';document.getElementById('s5-Q').value='cos(x)'">y′+tan(x)·y=cos(x)</button>
+      </div>
       <div class="form-grid">
         <div class="form-group">
           <label>P(x) — coeficiente de y</label>
@@ -878,7 +1113,93 @@
     </div>
   </section>
 
+  <!-- ===== SECCIÓN AUTO – IDENTIFICADOR AUTOMÁTICO ===== -->
+  <section class="eq-section" id="sec-auto">
+    <div class="section-header">
+      <div class="section-badge auto-badge">🔍</div>
+      <div>
+        <h2>Identificador Automático de EDOs</h2>
+        <div class="subtitle">Escribe cualquier EDO — el sistema detecta el tipo y la resuelve paso a paso</div>
+      </div>
+    </div>
+
+    <div class="theory-card" style="border-color:#f57f17">
+      <strong>¿Cómo funciona?</strong> El módulo analiza la ecuación ingresada y verifica
+      sistemáticamente los 5 criterios de clasificación:<br>
+      <span class="tipo-pill c-separable">Variable Separable</span>
+      <span class="tipo-pill c-homogenea">Homogénea</span>
+      <span class="tipo-pill c-reducible">Reducible a Hom.</span>
+      <span class="tipo-pill c-exacta">Exacta</span>
+      <span class="tipo-pill c-lineal">Lineal</span><br>
+      <small style="color:var(--muted)">
+        Formatos aceptados:&nbsp;
+        <code>y' = f(x,y)</code>&nbsp;|&nbsp;
+        <code>dy/dx = f(x,y)</code>&nbsp;|&nbsp;
+        <code>M(x,y)*dx + N(x,y)*dy = 0</code>
+      </small>
+    </div>
+
+    <!-- Pre-loaded examples -->
+    <div class="auto-examples-panel">
+      <div class="auto-examples-title">📚 Ejemplos precargados — haz clic para cargar:</div>
+      <div class="auto-examples-grid">
+        <button class="ejemplo-btn ej-sep" onclick="cargarEjemploAuto(&quot;y' = x*y&quot;)">
+          y′ = x·y<span class="ej-tipo">Separable</span>
+        </button>
+        <button class="ejemplo-btn ej-sep" onclick="cargarEjemploAuto(&quot;y' = sin(x)/cos(y)&quot;)">
+          y′ = sin(x)/cos(y)<span class="ej-tipo">Separable</span>
+        </button>
+        <button class="ejemplo-btn ej-hom" onclick="cargarEjemploAuto(&quot;y' = (x^2+y^2)/(2*x*y)&quot;)">
+          y′ = (x²+y²)/(2xy)<span class="ej-tipo">Homogénea</span>
+        </button>
+        <button class="ejemplo-btn ej-hom" onclick="cargarEjemploAuto(&quot;y' = (x+y)/x&quot;)">
+          y′ = (x+y)/x<span class="ej-tipo">Homogénea</span>
+        </button>
+        <button class="ejemplo-btn ej-red" onclick="cargarEjemploAuto(&quot;y' = (x-y+2)/(x+y-1)&quot;)">
+          y′ = (x−y+2)/(x+y−1)<span class="ej-tipo">Reducible</span>
+        </button>
+        <button class="ejemplo-btn ej-red" onclick="cargarEjemploAuto(&quot;y' = (2*x+y+1)/(x+2*y-1)&quot;)">
+          y′ = (2x+y+1)/(x+2y−1)<span class="ej-tipo">Reducible</span>
+        </button>
+        <button class="ejemplo-btn ej-exa" onclick="cargarEjemploAuto(&quot;(2*x*y+3)*dx + (x^2+4*y)*dy = 0&quot;)">
+          (2xy+3)dx+(x²+4y)dy=0<span class="ej-tipo">Exacta</span>
+        </button>
+        <button class="ejemplo-btn ej-exa" onclick="cargarEjemploAuto(&quot;(3*x^2*y+y^3)*dx + (x^3+3*x*y^2)*dy = 0&quot;)">
+          (3x²y+y³)dx+(x³+3xy²)dy=0<span class="ej-tipo">Exacta</span>
+        </button>
+        <button class="ejemplo-btn ej-lin" onclick="cargarEjemploAuto(&quot;y' + 2/x*y = x^2&quot;)">
+          y′+(2/x)y=x²<span class="ej-tipo">Lineal</span>
+        </button>
+        <button class="ejemplo-btn ej-lin" onclick="cargarEjemploAuto(&quot;y' - 2*y = e^x&quot;)">
+          y′−2y=eˣ<span class="ej-tipo">Lineal</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="auto-input-card">
+      <div class="form-group">
+        <label style="font-weight:700;color:var(--muted)">Ingresa tu ecuación diferencial:</label>
+        <div class="auto-input-row">
+          <input id="auto-input" type="text"
+                 placeholder="Ej: y' = x*y  ó  y' + 2/x*y = x^2  ó  (2*x*y+3)*dx + (x^2+4*y)*dy = 0"
+                 autocomplete="off" spellcheck="false"
+                 onkeydown="if(event.key==='Enter')identificarYResolver()" />
+          <button class="btn-resolver auto-btn" onclick="identificarYResolver()">🔍 Identificar y Resolver</button>
+          <button class="wa-clear-btn"
+                  onclick="document.getElementById('auto-input').value='';document.getElementById('auto-result').style.display='none'">✕</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="auto-result" style="display:none;margin-top:1.8rem"></div>
+
+  </section>
+
 </main>
+
+<!-- ===== fin main ===== -->
 
 <footer>LiuCalculadora · Ecuaciones Diferenciales Ordinarias · 2025</footer>
 
@@ -1328,6 +1649,507 @@
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
+
+  /* ================================================================
+     HELPERS PARA SECCIÓN 3 (Reducible) – carga de ejemplos
+     ================================================================ */
+  function setS3(a1, b1, c1, a2, b2, c2) {
+    document.getElementById('s3-a1').value = a1;
+    document.getElementById('s3-b1').value = b1;
+    document.getElementById('s3-c1').value = c1;
+    document.getElementById('s3-a2').value = a2;
+    document.getElementById('s3-b2').value = b2;
+    document.getElementById('s3-c2').value = c2;
+  }
+
+  /* ================================================================
+     SECCIÓN AUTO – IDENTIFICADOR AUTOMÁTICO DE EDOs
+     ================================================================ */
+
+  /** Carga un ejemplo en el campo del identificador automático */
+  function cargarEjemploAuto(expr) {
+    document.getElementById('auto-input').value = expr;
+    document.getElementById('auto-result').style.display = 'none';
+    document.getElementById('auto-input').focus();
+  }
+
+  /** Función principal: identifica y resuelve la EDO */
+  function identificarYResolver() {
+    const input = document.getElementById('auto-input').value.trim();
+    const result = document.getElementById('auto-result');
+    if (!input) { result.style.display = 'none'; return; }
+    result.style.display = 'block';
+
+    if (typeof nerdamer === 'undefined') {
+      result.innerHTML = '<div class="msg-warning">⚠ Biblioteca simbólica no disponible. Conéctate a internet y recarga la página.</div>';
+      return;
+    }
+
+    try {
+      const id = analizarEDO(input);
+      result.innerHTML = renderIdentificacion(id);
+      renderMath();
+    } catch (e) {
+      result.innerHTML = `<div class="msg-error">⚠ Error al analizar la ecuación: ${escapeHtml(String(e.message || e))}</div>`;
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     PARSEAR – Convierte el texto a forma canónica
+     ---------------------------------------------------------------- */
+  function parsearEDO(input) {
+    let s = input.trim();
+
+    // Normalizar dy/dx → y'
+    s = s.replace(/dy\s*\/\s*dx/gi, "y'");
+
+    // Forma diferencial:  M*dx + N*dy = 0  (o M dx + N dy = 0)
+    const diffMatch = s.match(/^(.+?)\s*\*?\s*dx\s*\+\s*(.+?)\s*\*?\s*dy\s*=\s*0\s*$/i);
+    if (diffMatch) {
+      return { form: 'differential', M: diffMatch[1].trim(), N: diffMatch[2].trim(), raw: input };
+    }
+
+    // Forma explícita con "="
+    const eqIdx = s.indexOf('=');
+    if (eqIdx !== -1) {
+      const lhs = s.substring(0, eqIdx).trim();
+      const rhs = s.substring(eqIdx + 1).trim();
+
+      // y' = f(x,y)
+      if (/^y'$/.test(lhs)) {
+        return { form: 'explicit', rhs, raw: input };
+      }
+
+      // y' + P(x)*y = Q(x)  →  y' = Q(x) - P(x)*y
+      if (lhs.includes("y'")) {
+        // Move everything except y' to rhs: y' = rhs - (lhs - y')
+        const rest = lhs.replace(/y'/, '').trim();
+        if (rest) {
+          // rest is "+ P(x)*y" or "- something"
+          const newRhs = `(${rhs}) - (${rest})`;
+          return { form: 'explicit', rhs: newRhs, rawLhs: lhs, rawRhs: rhs, raw: input };
+        }
+        return { form: 'explicit', rhs, raw: input };
+      }
+    }
+
+    // Intento: si no hay '=', tratar como rhs directo
+    return { form: 'explicit', rhs: s, raw: input };
+  }
+
+  /* ----------------------------------------------------------------
+     VERIFICADORES DE TIPO
+     ---------------------------------------------------------------- */
+
+  /** Lineal: dy/dx + P(x)y = Q(x)  ↔  d²F/dy² = 0 */
+  function checkLineal(rhs) {
+    try {
+      const d2 = nerdamer(`diff(${rhs}, y, 2)`).expand().toString();
+      if (d2 === '0') {
+        const Ay = nerdamer(`diff(${rhs}, y)`).toString();   // coef. de y (= −P)
+        const Bx = nerdamer(rhs, { y: '0' }).toString();      // término libre = Q
+        const P  = nerdamer(`-(${Ay})`).toString();
+        return {
+          ok: true,
+          razon: `La segunda derivada parcial \\(\\dfrac{\\partial^2 F}{\\partial y^2} = ${latex(d2)} = 0\\), confirmando que F(x,y) es de grado ≤ 1 en \\(y\\). Forma estándar: \\(P(x) = ${latex(P)},\\; Q(x) = ${latex(Bx)}\\).`,
+          datos: { P, Q: Bx, Ay }
+        };
+      }
+      return { ok: false, razon: `\\(\\dfrac{\\partial^2 F}{\\partial y^2} = ${latex(d2)} \\neq 0\\) — no es lineal de primer orden.` };
+    } catch (e) {
+      return { ok: false, razon: `No se pudo verificar (${escapeHtml(String(e.message || e))}).` };
+    }
+  }
+
+  /** Separable: dy/dx = f(x)·g(y)  ↔  F·F_xy = F_x·F_y */
+  function checkSeparable(rhs) {
+    try {
+      const Fx  = nerdamer(`diff(${rhs}, x)`).toString();
+      const Fy  = nerdamer(`diff(${rhs}, y)`).toString();
+      const Fxy = nerdamer(`diff(${Fx}, y)`).toString();
+      const criterion = nerdamer(`expand((${rhs})*(${Fxy}) - (${Fx})*(${Fy}))`).toString();
+
+      const isZero = criterion === '0';
+      let numericalOk = false;
+
+      if (!isZero) {
+        // Verificación numérica en 5 puntos
+        const pts = [{ x: '1', y: '2' }, { x: '2', y: '3' }, { x: '0.5', y: '1.5' },
+                     { x: '3', y: '0.5' }, { x: '1.5', y: '2.5' }];
+        numericalOk = pts.every(pt => {
+          try {
+            const v = parseFloat(nerdamer(criterion, pt).evaluate().text());
+            return isFinite(v) && Math.abs(v) < 1e-6;
+          } catch (_) { return false; }
+        });
+      }
+
+      if (isZero || numericalOk) {
+        const fx = nerdamer(rhs, { y: '1' }).toString();
+        const gy = nerdamer(rhs, { x: '1' }).toString();
+        return {
+          ok: true,
+          razon: `Se cumple el criterio \\(F \\cdot F_{xy} = F_x \\cdot F_y\\)${numericalOk && !isZero ? ' (verificado numéricamente)' : ''}. La ecuación se separa como \\(\\dfrac{dy}{g(y)} = f(x)\\,dx\\) con \\(f(x) \\approx ${latex(fx)},\\; g(y) \\approx ${latex(gy)}\\).`,
+          datos: { fx, gy }
+        };
+      }
+      return { ok: false, razon: `El criterio \\(F \\cdot F_{xy} - F_x \\cdot F_y = ${latex(criterion)} \\neq 0\\) — no es separable.` };
+    } catch (e) {
+      return { ok: false, razon: `No se pudo verificar (${escapeHtml(String(e.message || e))}).` };
+    }
+  }
+
+  /** Homogénea grado 0: x·F_x + y·F_y = 0 (Euler) */
+  function checkHomogenea(rhs) {
+    try {
+      const Fx    = nerdamer(`diff(${rhs}, x)`).toString();
+      const Fy    = nerdamer(`diff(${rhs}, y)`).toString();
+      const euler = nerdamer(`expand(x*(${Fx}) + y*(${Fy}))`).toString();
+
+      const isZero = euler === '0';
+      let numericalOk = false;
+
+      if (!isZero) {
+        // Verificación: F(2x,2y) = F(x,y)
+        const pts = [{ x: '1', y: '1' }, { x: '2', y: '3' }, { x: '0.5', y: '2' }];
+        numericalOk = pts.every(pt => {
+          try {
+            const v1 = parseFloat(nerdamer(rhs, pt).evaluate().text());
+            const v2 = parseFloat(nerdamer(rhs, { x: String(2 * parseFloat(pt.x)), y: String(2 * parseFloat(pt.y)) }).evaluate().text());
+            return isFinite(v1) && isFinite(v2) && Math.abs(v1 - v2) < 1e-6;
+          } catch (_) { return false; }
+        });
+      }
+
+      if (isZero || numericalOk) {
+        return {
+          ok: true,
+          razon: `Se cumple el teorema de Euler \\(x F_x + y F_y = 0\\)${numericalOk && !isZero ? ' (verificado con F(tx,ty)=F(x,y))' : ''}: F es homogénea de grado 0. Sustitución: \\(v = y/x\\).`,
+          datos: { Mcalc: `-(${rhs})`, Ncalc: '1', rhs }
+        };
+      }
+      return { ok: false, razon: `\\(x F_x + y F_y = ${latex(euler)} \\neq 0\\) — no es homogénea de grado 0.` };
+    } catch (e) {
+      return { ok: false, razon: `No se pudo verificar (${escapeHtml(String(e.message || e))}).` };
+    }
+  }
+
+  /** Exacta: ∂M/∂y = ∂N/∂x */
+  function checkExacta(M, N) {
+    try {
+      const dMdy  = nerdamer(`diff(${M}, y)`).toString();
+      const dNdx  = nerdamer(`diff(${N}, x)`).toString();
+      const diffE = nerdamer(`expand((${dMdy}) - (${dNdx}))`).toString();
+
+      const isZero = diffE === '0';
+      let numericalOk = false;
+
+      if (!isZero) {
+        const pts = [{ x: '1', y: '1' }, { x: '2', y: '3' }, { x: '0.5', y: '1.5' }];
+        numericalOk = pts.every(pt => {
+          try {
+            const v = parseFloat(nerdamer(diffE, pt).evaluate().text());
+            return isFinite(v) && Math.abs(v) < 1e-6;
+          } catch (_) { return false; }
+        });
+      }
+
+      if (isZero || numericalOk) {
+        return {
+          ok: true,
+          razon: `\\(\\dfrac{\\partial M}{\\partial y} = ${latex(dMdy)} = \\dfrac{\\partial N}{\\partial x} = ${latex(dNdx)}\\)${numericalOk && !isZero ? ' (verificado numéricamente)' : ''} ✅ — condición de exactitud satisfecha.`,
+          dados: { M, N, dMdy, dNdx },
+          datos: { M, N, dMdy, dNdx }
+        };
+      }
+      return {
+        ok: false,
+        razon: `\\(\\dfrac{\\partial M}{\\partial y} - \\dfrac{\\partial N}{\\partial x} = ${latex(diffE)} \\neq 0\\) — no es exacta.`
+      };
+    } catch (e) {
+      return { ok: false, razon: `No se pudo verificar (${escapeHtml(String(e.message || e))}).` };
+    }
+  }
+
+  /** Reducible a homogénea: rhs = (a1x+b1y+c1)/(a2x+b2y+c2), con c1 o c2 ≠ 0 */
+  function checkReducible(rhs) {
+    try {
+      const num_s = nerdamer(`numer(${rhs})`).expand().toString();
+      const den_s = nerdamer(`denom(${rhs})`).expand().toString();
+
+      // Verificar grado ≤ 1 en x e y para num y den
+      const checks = [
+        nerdamer(`diff(${num_s}, x, 2)`).expand().toString(),
+        nerdamer(`diff(${num_s}, y, 2)`).expand().toString(),
+        nerdamer(`diff(${den_s}, x, 2)`).expand().toString(),
+        nerdamer(`diff(${den_s}, y, 2)`).expand().toString()
+      ];
+      if (!checks.every(c => c === '0')) {
+        return { ok: false, razon: `El numerador o denominador no es lineal en \\(x\\) e \\(y\\) — no es reducible a homogénea.` };
+      }
+
+      // Extraer coeficientes
+      const a1 = parseFloat(nerdamer(`diff(${num_s}, x)`, { x: '0', y: '0' }).evaluate().text());
+      const b1 = parseFloat(nerdamer(`diff(${num_s}, y)`, { x: '0', y: '0' }).evaluate().text());
+      const c1 = parseFloat(nerdamer(num_s, { x: '0', y: '0' }).evaluate().text());
+      const a2 = parseFloat(nerdamer(`diff(${den_s}, x)`, { x: '0', y: '0' }).evaluate().text());
+      const b2 = parseFloat(nerdamer(`diff(${den_s}, y)`, { x: '0', y: '0' }).evaluate().text());
+      const c2 = parseFloat(nerdamer(den_s, { x: '0', y: '0' }).evaluate().text());
+
+      // Al menos un término constante no nulo
+      if (Math.abs(c1) < 1e-9 && Math.abs(c2) < 1e-9) {
+        return { ok: false, razon: `Los términos constantes son nulos (c₁=c₂=0): la ecuación es homogénea, no reducible.` };
+      }
+
+      return {
+        ok: true,
+        razon: `Numerador: \\(${a1}x${sign(b1)}${Math.abs(b1)}y${sign(c1)}${Math.abs(c1)}\\) y denominador: \\(${a2}x${sign(b2)}${Math.abs(b2)}y${sign(c2)}${Math.abs(c2)}\\) son lineales con término cte ≠ 0. Se usa traslación al punto de intersección.`,
+        datos: { a1, b1, c1, a2, b2, c2 }
+      };
+    } catch (e) {
+      return { ok: false, razon: `No se pudo verificar (${escapeHtml(String(e.message || e))}).` };
+    }
+  }
+
+  /* ----------------------------------------------------------------
+     ANÁLISIS PRINCIPAL
+     ---------------------------------------------------------------- */
+  function analizarEDO(input) {
+    const parsed = parsearEDO(input);
+    const checks  = [];
+    let tipo = null;
+    let datosSolucion = null;
+
+    if (parsed.form === 'explicit') {
+      const rhs = parsed.rhs;
+
+      // 1. Lineal
+      const linCheck = checkLineal(rhs);
+      checks.push({ nombre: 'Lineal de primer orden', color: '#880e4f', ...linCheck });
+      if (linCheck.ok && !tipo) { tipo = 'lineal'; datosSolucion = linCheck.datos; }
+
+      // 2. Separable
+      const sepCheck = checkSeparable(rhs);
+      checks.push({ nombre: 'Variable separable', color: '#1565c0', ...sepCheck });
+      if (sepCheck.ok && !tipo) { tipo = 'separable'; datosSolucion = sepCheck.datos; }
+
+      // 3. Homogénea
+      const homCheck = checkHomogenea(rhs);
+      checks.push({ nombre: 'Homogénea (grado 0)', color: '#6a1b9a', ...homCheck });
+      if (homCheck.ok && !tipo) { tipo = 'homogenea'; datosSolucion = homCheck.datos; }
+
+      // 4. Reducible a homogénea
+      const redCheck = checkReducible(rhs);
+      checks.push({ nombre: 'Reducible a homogénea', color: '#00695c', ...redCheck });
+      if (redCheck.ok && !tipo) { tipo = 'reducible'; datosSolucion = redCheck.datos; }
+
+      // 5. Exacta (M = −rhs, N = 1)
+      const exactCheck = checkExacta(`-(${rhs})`, '1');
+      checks.push({ nombre: 'Exacta', color: '#e65100', ...exactCheck });
+      if (exactCheck.ok && !tipo) { tipo = 'exacta'; datosSolucion = { ...exactCheck.datos, M: `-(${rhs})`, N: '1' }; }
+
+    } else if (parsed.form === 'differential') {
+      const { M, N } = parsed;
+
+      // 1. Exacta
+      const exactCheck = checkExacta(M, N);
+      checks.push({ nombre: 'Exacta', color: '#e65100', ...exactCheck });
+      if (exactCheck.ok && !tipo) { tipo = 'exacta'; datosSolucion = exactCheck.datos; }
+
+      const rhs = `-(${M})/(${N})`;
+
+      // 2. Separable
+      const sepCheck = checkSeparable(rhs);
+      checks.push({ nombre: 'Variable separable', color: '#1565c0', ...sepCheck });
+      if (sepCheck.ok && !tipo) { tipo = 'separable'; datosSolucion = sepCheck.datos; }
+
+      // 3. Homogénea
+      const homCheck = checkHomogenea(rhs);
+      checks.push({ nombre: 'Homogénea (grado 0)', color: '#6a1b9a', ...homCheck });
+      if (homCheck.ok && !tipo) { tipo = 'homogenea'; datosSolucion = { ...homCheck.datos, M, N }; }
+
+      // 4. Lineal
+      const linCheck = checkLineal(rhs);
+      checks.push({ nombre: 'Lineal de primer orden', color: '#880e4f', ...linCheck });
+      if (linCheck.ok && !tipo) { tipo = 'lineal'; datosSolucion = linCheck.datos; }
+
+      // 5. Reducible a homogénea
+      const redCheck = checkReducible(rhs);
+      checks.push({ nombre: 'Reducible a homogénea', color: '#00695c', ...redCheck });
+      if (redCheck.ok && !tipo) { tipo = 'reducible'; datosSolucion = redCheck.datos; }
+    }
+
+    return { tipo, checks, datosSolucion, parsed };
+  }
+
+  /* ----------------------------------------------------------------
+     RENDERIZADO DEL RESULTADO
+     ---------------------------------------------------------------- */
+  const TIPO_INFO = {
+    lineal:    { color: '#880e4f', nombre: 'Lineal de Primer Orden' },
+    separable: { color: '#1565c0', nombre: 'Variable Separable' },
+    homogenea: { color: '#6a1b9a', nombre: 'Homogénea' },
+    reducible: { color: '#00695c', nombre: 'Reducible a Homogénea' },
+    exacta:    { color: '#e65100', nombre: 'Exacta' }
+  };
+
+  function renderIdentificacion(id) {
+    const { tipo, checks, datosSolucion, parsed } = id;
+    let html = '';
+
+    // Panel de verificación de criterios
+    html += '<div class="auto-checks-panel">';
+    html += '<h3>🔬 Verificación de criterios — análisis sistemático:</h3>';
+    html += '<div class="checks-list">';
+    for (const ch of checks) {
+      const icon = ch.ok ? '✅' : '❌';
+      const cls  = ch.ok ? 'check-ok' : 'check-no';
+      html +=
+        `<div class="check-item ${cls}">` +
+          `<div class="check-header">${icon} <strong>${ch.nombre}</strong></div>` +
+          `<div class="check-reason">${ch.razon}</div>` +
+        `</div>`;
+    }
+    html += '</div></div>';
+
+    if (tipo) {
+      const info = TIPO_INFO[tipo] || { color: '#333', nombre: tipo };
+
+      html +=
+        `<div class="auto-tipo-result" style="border-color:${info.color}">` +
+          `<div class="tipo-result-badge" style="background:${info.color}">✔ Tipo identificado</div>` +
+          `<div class="tipo-result-nombre" style="color:${info.color}">${info.nombre}</div>` +
+          `<div class="tipo-result-explain">La ecuación ingresada corresponde a una EDO de tipo <strong>${info.nombre}</strong>. A continuación se muestra la solución completa paso a paso.</div>` +
+        `</div>`;
+
+      html += '<div class="auto-solucion">';
+      html += '<h3>📋 Solución paso a paso:</h3>';
+      html += renderSolucionAuto(tipo, datosSolucion, parsed);
+      html += '</div>';
+    } else {
+      html +=
+        '<div class="msg-warning">' +
+        '⚠ <strong>No se pudo identificar el tipo automáticamente.</strong> Posibles causas:<br>' +
+        '<ul style="margin:.4rem 0 0 1.2rem;font-size:.9rem">' +
+        '<li>La expresión puede requerir ser ingresada en la forma <code>y\' = f(x,y)</code> o <code>M·dx + N·dy = 0</code>.</li>' +
+        '<li>Intenta simplificar la ecuación antes de ingresarla.</li>' +
+        '<li>Prueba las secciones individuales (1–5) para resolución manual.</li>' +
+        '</ul></div>';
+    }
+
+    return html;
+  }
+
+  function renderSolucionAuto(tipo, datos, parsed) {
+    const steps = [];
+    let solHtml = '';
+    try {
+      switch (tipo) {
+        case 'separable': {
+          const { fx, gy } = datos;
+          steps.push(`La ecuación es de <strong>variable separable</strong>: \\(\\dfrac{dy}{dx} = f(x) \\cdot g(y)\\)`);
+          steps.push(`Identificamos \\(f(x) = ${latex(fx)}\\) y \\(g(y) = ${latex(gy)}\\)`);
+          steps.push(`Separamos variables: \\(\\dfrac{dy}{g(y)} = f(x)\\,dx\\)&nbsp;→&nbsp;\\(\\dfrac{dy}{${latex(gy)}} = ${latex(fx)}\\,dx\\)`);
+          const intGy = integ(`1/(${gy})`, 'y');
+          const intFx = integ(fx, 'x');
+          steps.push(`Integramos ambos lados: \\(\\displaystyle\\int \\frac{dy}{${latex(gy)}} = \\int ${latex(fx)}\\,dx\\)`);
+          steps.push(`\\(${latex(intGy)} = ${latex(intFx)} + C\\)`);
+          solHtml = `<strong>Solución implícita:</strong><br>\\(${latex(intGy)} = ${latex(intFx)} + C\\)`;
+          break;
+        }
+        case 'lineal': {
+          const { P, Q } = datos;
+          steps.push(`La ecuación es <strong>lineal de primer orden</strong>: \\(\\dfrac{dy}{dx} + P(x)\\,y = Q(x)\\)`);
+          steps.push(`Identificamos \\(P(x) = ${latex(P)}\\) y \\(Q(x) = ${latex(Q)}\\)`);
+          const intP  = integ(P, 'x');
+          steps.push(`Calculamos \\(\\displaystyle\\int P(x)\\,dx = ${latex(intP)}\\)`);
+          steps.push(`Factor integrante: \\(\\mu(x) = e^{\\int P\\,dx} = e^{${latex(intP)}}\\)`);
+          let mu;
+          try { mu = nerdamer(`e^(${intP})`).toString(); } catch (_) { mu = `e^(${intP})`; }
+          const muQ = simplify(`(${mu})*(${Q})`);
+          steps.push(`Multiplicamos por \\(\\mu\\): \\(\\dfrac{d}{dx}[\\mu y] = \\mu Q = ${latex(muQ)}\\)`);
+          const intMuQ = integ(muQ, 'x');
+          steps.push(`Integrando: \\(\\mu\\,y = ${latex(intMuQ)} + C\\)`);
+          steps.push(`Despejamos \\(y\\):`);
+          solHtml = `<strong>Solución general:</strong><br>\\(y = \\dfrac{${latex(intMuQ)} + C}{${latex(mu)}}\\)`;
+          break;
+        }
+        case 'homogenea': {
+          const rhs = parsed.form === 'explicit'
+            ? parsed.rhs
+            : `-(${datos.M || datos.Mcalc})/(${datos.N || datos.Ncalc || '1'})`;
+          const rhsDisp = parsed.form === 'explicit' ? parsed.rhs : `-(${datos.M})/(${datos.N})`;
+          steps.push(`La ecuación es <strong>homogénea de grado 0</strong>: \\(\\dfrac{dy}{dx} = F(x,y)\\) con \\(F(tx,ty)=F(x,y)\\)`);
+          steps.push(`Sustitución: \\(v = \\dfrac{y}{x}\\;\\Rightarrow\\; y=vx,\\quad \\dfrac{dy}{dx} = v + x\\dfrac{dv}{dx}\\)`);
+          let Mv, Nv;
+          const Mh = datos.M || `-(${rhs})`;
+          const Nh = datos.N || '1';
+          try {
+            Mv = nerdamer(Mh, { y: 'v*x' }).toString();
+            Nv = nerdamer(Nh, { y: 'v*x' }).toString();
+          } catch (_) { Mv = Mh; Nv = Nh; }
+          const rhsV  = simplify(`-(${Mv})/(${Nv})`);
+          steps.push(`Sustituyendo \\(y=vx\\): \\(v + x\\dfrac{dv}{dx} = ${latex(rhsV)}\\)`);
+          const rhsV2 = simplify(`(${rhsV}) - v`);
+          steps.push(`\\(x\\dfrac{dv}{dx} = ${latex(rhsV2)}\\) — separable en \\(v\\) y \\(x\\)`);
+          const intLHS = integ(`1/(${rhsV2})`, 'v');
+          steps.push(`Integrando: \\(${latex(intLHS)} = \\ln|x| + C\\)`);
+          steps.push(`Restituyendo \\(v = y/x\\)`);
+          solHtml = `<strong>Solución (sustituir \\(v=y/x\\)):</strong><br>\\(${latex(intLHS)}\\Big|_{v=y/x} = \\ln|x| + C\\)`;
+          break;
+        }
+        case 'reducible': {
+          const { a1, b1, c1, a2, b2, c2 } = datos;
+          const det = a1 * b2 - a2 * b1;
+          steps.push(`La ecuación es <strong>reducible a homogénea</strong>: \\(\\dfrac{dy}{dx} = \\dfrac{${a1}x${sign(b1)}${Math.abs(b1)}y${sign(c1)}${Math.abs(c1)}}{${a2}x${sign(b2)}${Math.abs(b2)}y${sign(c2)}${Math.abs(c2)}}\\)`);
+          steps.push(`Determinante: \\(\\Delta = ${a1}\\cdot${b2} - ${a2}\\cdot${b1} = ${det}\\)`);
+          if (det === 0) {
+            steps.push(`Como \\(\\Delta = 0\\), las rectas son <strong>paralelas</strong>.`);
+            steps.push(`Sustitución: \\(z = ${a1}x${sign(b1)}${Math.abs(b1)}y\\;\\Rightarrow\\; \\dfrac{dz}{dx} = ${a1}${sign(b1)}${Math.abs(b1)}\\dfrac{dy}{dx}\\)`);
+            steps.push(`La ecuación se transforma en una de <strong>variable separable</strong> en \\(z\\) y \\(x\\). Separa e integra.`);
+            solHtml = `<strong>Sustitución:</strong> \\(z = ${a1}x${sign(b1)}${Math.abs(b1)}y\\) — reduces to separable.`;
+          } else {
+            const h = ((-c1) * b2 - (-c2) * b1) / det;
+            const k = (a1 * (-c2) - a2 * (-c1)) / det;
+            steps.push(`Como \\(\\Delta \\neq 0\\), las rectas son <strong>secantes</strong>.`);
+            steps.push(`Sistema: \\(\\begin{cases}${a1}h${sign(b1)}${Math.abs(b1)}k=${-c1}\\\\${a2}h${sign(b2)}${Math.abs(b2)}k=${-c2}\\end{cases}\\) → \\((h,k)=(${fracStr(h)},${fracStr(k)})\\)`);
+            steps.push(`Traslación: \\(x=u+${fracStr(h)},\\; y=v+${fracStr(k)}\\)`);
+            steps.push(`La EDO se transforma en homogénea: \\(\\dfrac{dv}{du}=\\dfrac{${a1}u${sign(b1)}${Math.abs(b1)}v}{${a2}u${sign(b2)}${Math.abs(b2)}v}\\)`);
+            steps.push(`Se aplica la sustitución homogénea \\(w=v/u\\) para resolver.`);
+            solHtml = `<strong>Traslación:</strong> \\((h,k)=(${fracStr(h)},${fracStr(k)})\\)<br><strong>EDO reducida:</strong> \\(\\dfrac{dv}{du}=\\dfrac{${a1}u${sign(b1)}${Math.abs(b1)}v}{${a2}u${sign(b2)}${Math.abs(b2)}v}\\)`;
+          }
+          break;
+        }
+        case 'exacta': {
+          const M  = datos.M;
+          const N  = datos.N;
+          const dMdy = datos.dMdy || diff(M, 'y');
+          const dNdx = datos.dNdx || diff(N, 'x');
+          steps.push(`La ecuación \\((${latex(M)})\\,dx + (${latex(N)})\\,dy = 0\\) es <strong>exacta</strong>.`);
+          steps.push(`\\(\\dfrac{\\partial M}{\\partial y} = ${latex(dMdy)} = \\dfrac{\\partial N}{\\partial x} = ${latex(dNdx)}\\) ✅`);
+          steps.push(`Buscamos \\(F(x,y)\\) con \\(\\partial F/\\partial x = M\\):`);
+          const F1 = integ(M, 'x');
+          steps.push(`\\(F = \\displaystyle\\int M\\,dx = ${latex(F1)} + g(y)\\)`);
+          const dF1dy = diff(F1, 'y');
+          const gP    = simplify(`(${N}) - (${dF1dy})`);
+          const g     = integ(gP, 'y');
+          steps.push(`\\(g'(y) = N - \\dfrac{\\partial}{\\partial y}\\!\\int M\\,dx = ${latex(gP)}\\)`);
+          steps.push(`\\(g(y) = ${latex(g)}\\)`);
+          const Ff = simplify(`(${F1}) + (${g})`);
+          steps.push(`Función potencial: \\(F(x,y) = ${latex(Ff)}\\)`);
+          solHtml = `<strong>Solución general:</strong><br>\\(${latex(Ff)} = C\\)`;
+          break;
+        }
+      }
+    } catch (e) {
+      steps.push(`⚠ Error al calcular la solución: ${escapeHtml(String(e.message || e))}`);
+      solHtml = '<span class="msg-error">Error en la resolución. Verifica la expresión.</span>';
+    }
+
+    const stepsHtml = steps.map(s => `<li>${s}</li>`).join('');
+    return `<ul class="steps-list">${stepsHtml}</ul><div class="solution-box">${solHtml}</div>`;
+  }
+
 </script>
 </body>
 </html>
