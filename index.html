@@ -1300,20 +1300,33 @@
       const nd_result = nerdamer(val);
       const resStr    = nd_result.toString();
       let   resTex    = '';
-      try { resTex = nd_result.toTeX(); } catch(e) { resTex = resStr; }
+      try { resTex = nd_result.toTeX(); } catch(e) { resTex = escapeHtml(resStr); }
 
-      result.innerHTML =
-        `<div class="wa-result-box">` +
-          `<div class="wa-result-label">Resultado</div>` +
-          `<div class="wa-result-math">\\[${resTex}\\]</div>` +
-          `<div class="wa-result-text">${resStr}</div>` +
-        `</div>`;
+      const resultBox = document.createElement('div');
+      resultBox.className = 'wa-result-box';
+      resultBox.innerHTML =
+        `<div class="wa-result-label">Resultado</div>` +
+        `<div class="wa-result-math">\\[${resTex}\\]</div>` +
+        `<div class="wa-result-text">${escapeHtml(resStr)}</div>`;
+      result.innerHTML = '';
+      result.appendChild(resultBox);
       renderMath();
     } catch(e) {
-      result.innerHTML =
-        `<div class="wa-result-box wa-error">⚠ No se pudo evaluar la expresión.<br>` +
-        `<small>${e.message || String(e)}</small></div>`;
+      const errBox = document.createElement('div');
+      errBox.className = 'wa-result-box wa-error';
+      errBox.innerHTML = '⚠ No se pudo evaluar la expresión.<br><small>' + escapeHtml(String(e.message || e)) + '</small>';
+      result.innerHTML = '';
+      result.appendChild(errBox);
     }
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 </script>
 </body>
