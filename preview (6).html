@@ -1,0 +1,1794 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solucionador robusto de EDO de primer orden - By Liu</title>
+  <meta name="description" content="Página web para resolver ecuaciones diferenciales ordinarias de primer orden: lineales, separables, exactas y ecuaciones no despejadas." />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#111832;
+      --panel-2:#172044;
+      --text:#eef3ff;
+      --muted:#aab7d9;
+      --brand:#7aa2ff;
+      --brand-2:#9f7aff;
+      --ok:#48d597;
+      --warn:#ffd166;
+      --danger:#ff6b6b;
+      --border:rgba(255,255,255,.12);
+      --shadow:0 24px 60px rgba(0,0,0,.35);
+      --radius:22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(122,162,255,.28), transparent 34rem),
+        radial-gradient(circle at 85% 12%, rgba(159,122,255,.24), transparent 32rem),
+        radial-gradient(circle at 50% 100%, rgba(72,213,151,.10), transparent 30rem),
+        var(--bg);
+    }
+    a{color:var(--brand)}
+    .wrap{width:min(1180px, calc(100% - 32px)); margin:0 auto}
+    header{
+      padding:48px 0 22px;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:24px;
+      align-items:stretch;
+    }
+    .hero-card{
+      padding:32px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:linear-gradient(145deg, rgba(17,24,50,.92), rgba(23,32,68,.74));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      width:220px;height:220px;
+      right:-70px;top:-80px;
+      border-radius:50%;
+      background:linear-gradient(135deg, rgba(122,162,255,.34), rgba(159,122,255,.15));
+      filter:blur(2px);
+    }
+    .kicker{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:7px 11px;
+      border:1px solid rgba(122,162,255,.35);
+      border-radius:999px;
+      color:#dce6ff;
+      background:rgba(122,162,255,.10);
+      font-weight:700;
+      font-size:13px;
+      letter-spacing:.2px;
+      position:relative;
+      z-index:1;
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 18px var(--ok)}
+    h1{
+      margin:18px 0 12px;
+      font-size:clamp(32px, 5vw, 58px);
+      line-height:1.02;
+      letter-spacing:-1.8px;
+      position:relative;
+      z-index:1;
+    }
+    .lead{
+      margin:0;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.65;
+      max-width:820px;
+      position:relative;
+      z-index:1;
+    }
+    .mini{
+      display:grid;
+      gap:12px;
+      grid-template-columns:1fr;
+    }
+    .mini-card{
+      padding:18px 20px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(17,24,50,.72);
+      box-shadow:0 16px 40px rgba(0,0,0,.18);
+    }
+    .mini-card strong{display:block; font-size:15px; margin-bottom:6px}
+    .mini-card span{display:block; color:var(--muted); line-height:1.45; font-size:14px}
+
+    main{
+      display:grid;
+      grid-template-columns:minmax(0, .95fr) minmax(0, 1.05fr);
+      gap:22px;
+      padding:14px 0 48px;
+    }
+    .panel{
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:rgba(17,24,50,.82);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .panel-head{
+      padding:20px 22px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      background:rgba(255,255,255,.025);
+    }
+    .panel-head h2{
+      margin:0;
+      font-size:18px;
+      letter-spacing:-.2px;
+    }
+    .badge{
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--muted);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      white-space:nowrap;
+      background:rgba(255,255,255,.04);
+    }
+    .content{padding:22px}
+    label{
+      display:block;
+      font-weight:800;
+      margin-bottom:10px;
+      color:#f8fbff;
+    }
+    textarea{
+      width:100%;
+      min-height:178px;
+      resize:vertical;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:16px;
+      font:16px/1.5 var(--mono);
+      color:var(--text);
+      background:#0d1430;
+      outline:none;
+      transition:.2s border, .2s box-shadow;
+    }
+    textarea:focus{
+      border-color:rgba(122,162,255,.72);
+      box-shadow:0 0 0 4px rgba(122,162,255,.13);
+    }
+    .hint{
+      margin:10px 2px 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin:18px 0;
+    }
+    .check, .select-wrap{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px 13px;
+      background:rgba(255,255,255,.035);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-height:48px;
+    }
+    .check input{width:18px;height:18px; accent-color:#7aa2ff}
+    .check span, .select-wrap span{font-size:13px;color:var(--muted)}
+    select{
+      width:100%;
+      border:0;
+      outline:0;
+      color:var(--text);
+      background:transparent;
+      font-weight:700;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:16px 0 4px;
+    }
+    button{
+      border:0;
+      border-radius:15px;
+      padding:12px 16px;
+      font-weight:850;
+      color:#091126;
+      background:linear-gradient(135deg, var(--brand), #b4c5ff);
+      cursor:pointer;
+      box-shadow:0 14px 32px rgba(122,162,255,.22);
+      transition:.18s transform, .18s opacity, .18s filter;
+    }
+    button:hover{transform:translateY(-1px);filter:brightness(1.04)}
+    button:active{transform:translateY(0)}
+    button.secondary{
+      color:var(--text);
+      background:rgba(255,255,255,.08);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+    button.ghost{
+      color:#dfe7ff;
+      background:transparent;
+      border:1px solid rgba(122,162,255,.28);
+      box-shadow:none;
+      padding:9px 11px;
+      font-size:13px;
+    }
+    button:disabled{opacity:.55; cursor:not-allowed; transform:none}
+    .examples{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:18px;
+      padding-top:18px;
+      border-top:1px solid var(--border);
+    }
+    .example-title{
+      width:100%;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:2px;
+    }
+    .status{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:16px;
+    }
+    .status .light{width:10px;height:10px;border-radius:50%; background:var(--warn); box-shadow:0 0 18px var(--warn)}
+    .status.ready .light{background:var(--ok);box-shadow:0 0 18px var(--ok)}
+    .status.error .light{background:var(--danger);box-shadow:0 0 18px var(--danger)}
+    .result-empty{
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:26px;
+      line-height:1.6;
+      background:rgba(255,255,255,.025);
+    }
+    .solution{
+      border:1px solid var(--border);
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      padding:18px;
+      margin:14px 0;
+    }
+    .method{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .method strong{font-size:16px}
+    .method span{
+      color:#cbd7ff;
+      font-size:12px;
+      border:1px solid rgba(122,162,255,.25);
+      background:rgba(122,162,255,.08);
+      padding:5px 8px;
+      border-radius:999px;
+    }
+    .math{
+      overflow-x:auto;
+      padding:10px 8px;
+      border-radius:14px;
+      background:rgba(7,12,28,.55);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .math mjx-container{margin:0!important}
+    .steps{
+      margin:12px 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:14px;
+    }
+    .normalized{
+      margin-bottom:12px;
+      padding:14px;
+      border-radius:16px;
+      background:#0d1430;
+      border:1px solid rgba(255,255,255,.11);
+      color:#dce6ff;
+      font-family:var(--mono);
+      font-size:13px;
+      overflow-x:auto;
+    }
+    .notice{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+    details{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:rgba(255,255,255,.035);
+    }
+    summary{cursor:pointer; color:#dce6ff; font-weight:700}
+    pre{
+      white-space:pre-wrap;
+      word-break:break-word;
+      font-family:var(--mono);
+      color:#dce6ff;
+      font-size:12px;
+    }
+    footer{
+      padding:0 0 36px;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
+    }
+    @media (max-width: 920px){
+      .hero, main{grid-template-columns:1fr}
+      header{padding-top:28px}
+    }
+    @media (max-width: 560px){
+      .wrap{width:min(100% - 20px, 1180px)}
+      .hero-card,.content{padding:18px}
+      .panel-head{padding:16px 18px; align-items:flex-start; flex-direction:column}
+      .controls{grid-template-columns:1fr}
+      h1{letter-spacing:-1px}
+    }
+
+
+    /* UI compacta: menos letras y más espacio para salida/código */
+    .wrap{width:min(1440px, calc(100% - 24px))}
+    header{padding:16px 0 8px}
+    .hero{grid-template-columns:1fr;gap:10px}
+    .hero-card{padding:16px 20px;border-radius:18px}
+    .hero-card:before{display:none}
+    .kicker{font-size:12px;padding:5px 9px}
+    h1{margin:8px 0 4px;font-size:clamp(24px, 3vw, 36px);letter-spacing:-.8px}
+    .lead{font-size:13px;line-height:1.35;max-width:none}
+    .mini{display:none}
+    main{grid-template-columns:minmax(280px,.62fr) minmax(0,1.38fr);gap:14px;padding:8px 0 20px;min-height:calc(100vh - 130px)}
+    .panel{border-radius:18px}
+    .panel-head{padding:12px 16px}
+    .panel-head h2{font-size:15px}
+    .badge{font-size:11px;padding:5px 8px}
+    .content{padding:14px}
+    label{font-size:13px;margin-bottom:6px}
+    textarea{min-height:118px;padding:12px;border-radius:14px;font-size:15px}
+    .hint,.notice,.example-title{font-size:12px;line-height:1.35;margin-top:8px}
+    .controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+    .check,.select-wrap{padding:8px 9px;min-height:40px;border-radius:12px}
+    .check span,.select-wrap span{font-size:12px}
+    .actions{gap:8px;margin:10px 0 4px}
+    button{padding:9px 12px;border-radius:12px}
+    button.ghost{padding:7px 9px;font-size:12px}
+    .examples{gap:6px;margin-top:12px;padding-top:12px}
+    .status{padding:8px 10px;font-size:12px;margin-bottom:0}
+    .panel.result-panel{min-height:calc(100vh - 160px);display:flex;flex-direction:column}
+    .panel.result-panel .result-content{display:flex;flex-direction:column;gap:12px;flex:1;min-height:720px}
+    #output{flex:1;min-height:500px;overflow:auto;font-size:15px}
+    .result-empty{padding:18px;line-height:1.45}
+    .solution{padding:14px;margin:10px 0;border-radius:16px}
+    .method strong{font-size:14px}
+    .method span{font-size:11px}
+    .math{font-size:20px;padding:16px;min-height:84px}
+    .steps{font-size:12px;line-height:1.4;margin-top:8px}
+    .normalized{font-size:12px;padding:10px;margin-bottom:8px}
+    .code-box{border:1px solid var(--border);border-radius:16px;background:#080d1e;min-height:260px;max-height:38vh;display:flex;flex-direction:column;overflow:hidden}
+    .code-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.035)}
+    .code-top strong{font-size:12px;color:#dce6ff}
+    .mini-copy{font-size:11px!important;padding:6px 8px!important}
+    #pythonPreview{margin:0;flex:1;overflow:auto;padding:12px;font-size:12px;line-height:1.5;white-space:pre;word-break:normal;font-family:var(--mono);color:#dce6ff;background:transparent}
+    footer{padding:0 0 16px;font-size:11px}
+    @media (max-width: 980px){
+      main{grid-template-columns:1fr;min-height:auto}
+      .panel.result-panel .result-content{min-height:620px}
+      #output{min-height:360px}
+      .code-box{min-height:220px;max-height:42vh}
+    }
+
+
+
+    /* Mejoras: historial, exportacion y errores amigables */
+    .subgrid{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+    .mini-section{border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.035);padding:10px}
+    .mini-section h3{margin:0 0 8px;font-size:12px;color:#dce6ff;letter-spacing:.1px}
+    .num-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+    .num-grid label{margin:0;font-size:11px;color:var(--muted);font-weight:700}
+    .num-grid input{width:100%;margin-top:4px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:#0d1430;color:var(--text);padding:7px 8px;font:12px var(--mono);outline:none}
+    .history-list{display:grid;gap:6px;max-height:170px;overflow:auto}
+    .history-item{border:1px solid rgba(255,255,255,.10);border-radius:11px;background:rgba(13,20,48,.76);padding:8px;text-align:left;color:#dfe7ff;box-shadow:none;width:100%;font:12px/1.35 var(--mono);cursor:pointer}
+    .history-item:hover{border-color:rgba(122,162,255,.46);transform:none;filter:none}
+    .history-item small{display:block;color:var(--muted);font-family:var(--sans);margin-top:3px}
+    .history-empty{font-size:12px;color:var(--muted);line-height:1.35}
+    .friendly{border:1px solid rgba(255,209,102,.35);background:rgba(255,209,102,.08);border-radius:14px;padding:12px;margin-top:12px;color:#fff1c2;font-size:13px;line-height:1.45}
+    .friendly strong{color:#ffe19a}
+    .export-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .print-title{display:none}
+    @media (max-width: 980px){
+      .subgrid{grid-template-columns:1fr}
+    }
+    @media (max-width: 560px){
+      .actions button,.export-row button{flex:1 1 45%}
+      .num-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .math{font-size:16px;padding:12px}
+      .code-box{border-radius:12px}
+      #pythonPreview{font-size:11px}
+    }
+    @media print{
+      body{background:white;color:#111}
+      header,.panel:first-of-type,footer,.status,.code-top button,.actions,.examples,.subgrid{display:none!important}
+      .wrap{width:100%;margin:0}
+      main{display:block;padding:0}
+      .panel,.solution,.math,.normalized,.code-box{box-shadow:none;border-color:#bbb;background:white;color:#111}
+      .panel-head{background:white;border-color:#bbb}
+      .badge,.notice,.steps{color:#333}
+      #output{min-height:auto;overflow:visible;color:#111}
+      #pythonPreview{color:#111;white-space:pre-wrap}
+      .print-title{display:block;font-size:22px;font-weight:800;margin:0 0 12px}
+    }
+
+  </style>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <header class="wrap compact-head">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="kicker"><span class="dot"></span> SymPy · dsolve</div>
+        <h1>EDO Solver</h1>
+        <p class="lead">Escribe la ecuación. Se genera Python y se resuelve con SymPy.</p>
+      </div>
+    </section>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Ecuación</h2>
+        <span class="badge">x → y</span>
+      </div>
+      <div class="content">
+        <label for="equation">EDO</label>
+        <textarea id="equation" spellcheck="false" placeholder="xy' - y = y^3"></textarea>
+        <p class="hint"><code>y'</code>, <code>dy/dx</code> o <code>M dx + N dy = 0</code>. También: <code>sen</code>, <code>tg</code>, <code>ln</code>, <code>^</code>.</p>
+
+        <div class="controls">
+          <label class="check">
+            <input id="autoSolve" type="checkbox" checked />
+            <span>Auto</span>
+          </label>
+          <label class="check">
+            <input id="deepSolve" type="checkbox" checked />
+            <span>SymPy <code>dsolve</code></span>
+          </label>
+          <label class="select-wrap">
+            <span>Límite</span>
+            <select id="timeout">
+              <option value="6000">6 s</option>
+              <option value="12000" selected>12 s</option>
+              <option value="20000">20 s</option>
+            </select>
+          </label>
+          <label class="check">
+            <input id="showText" type="checkbox" />
+            <span>txt SymPy</span>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="solveBtn">Resolver</button>
+          <button class="secondary" id="clearBtn">Limpiar</button>
+          <button class="secondary" id="copyBtn">Copiar</button>
+          <button class="secondary" id="exportMdBtn">MD</button>
+          <button class="secondary" id="exportPdfBtn">PDF</button>
+        </div>
+
+        <div class="examples">
+          <div class="example-title">Ejemplos</div>
+          <button class="ghost" data-example="xy' - y = y^3">No despejada</button>
+          <button class="ghost" data-example="sqrt(1+x^3) dy/dx = x^2 y + x^2">Lineal/separable</button>
+          <button class="ghost" data-example="tg x.sen^2 y.dx + cos^2 x.ctg y.dy = 0">Diferencial \(dx,dy\)</button>
+          <button class="ghost" data-example="(1-y)e^x y' + y^2/(x ln x)=0">Con logaritmo</button>
+          <button class="ghost" data-example="dy/dx=(a*x+b)/(c*x+d)">Con parámetros</button>
+          <button class="ghost" data-example="dy/dx=(2*y-x+5)/(2*x-y-4)">Red. homogénea</button>
+          <button class="ghost" data-example="x*y' = 2*(y - sqrt(x*y))">Hom. raíz</button>
+          <button class="ghost" data-example="dy = (y/x - csc^2(y/x)) dx">Hom. trig</button>
+        </div>
+
+        <div class="subgrid">
+          <div class="mini-section">
+            <h3>Historial</h3>
+            <div id="historyList" class="history-list"><span class="history-empty">Sin historial.</span></div>
+            <div class="export-row"><button class="ghost mini-copy" id="clearHistoryBtn">Borrar historial</button></div>
+          </div>
+        </div>
+        <p class="notice">Motor principal: <strong>SymPy</strong>. Incluye lineales, separables, exactas, homogéneas y reducibles a homogéneas.</p>
+      </div>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="panel-head">
+        <h2>Salida</h2>
+        <span class="badge" id="engineBadge">SymPy…</span>
+      </div>
+      <div class="content result-content">
+        <div id="status" class="status"><span class="light"></span><span>Cargando SymPy…</span></div>
+        <p class="print-title">Reporte de EDO Solver</p>
+        <div id="output" class="result-empty">Listo.</div>
+        <div class="code-box">
+          <div class="code-top">
+            <strong>Python generado</strong>
+            <button class="ghost mini-copy" id="copyCodeBtn">Copiar código</button>
+          </div>
+          <pre id="pythonPreview"># Aquí aparecerá el código usado con SymPy / dsolve</pre>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    Pyodide + SymPy + MathJax
+  </footer>
+
+<script type="text/plain" id="python-code">
+import re, json, traceback
+import sympy as sp
+from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application, convert_xor
+
+x, y = sp.symbols('x y')
+yp, DX, DY = sp.symbols('yp DX DY')
+C1 = sp.Symbol('C1')
+Y = sp.Function('y')(x)
+HOMOGENEOUS_CACHE = {}
+REDUCIBLE_CACHE = {}
+
+TRANSFORMS = standard_transformations + (implicit_multiplication_application, convert_xor)
+LOCAL = {
+    'x': x, 'y': y, 'yp': yp, 'DX': DX, 'DY': DY,
+    'sin': sp.sin, 'cos': sp.cos, 'tan': sp.tan, 'cot': sp.cot,
+    'sec': sp.sec, 'csc': sp.csc, 'asin': sp.asin, 'acos': sp.acos,
+    'atan': sp.atan, 'arctan': sp.atan, 'acot': sp.acot, 'sqrt': sp.sqrt, 'log': sp.log,
+    'ln': sp.log, 'exp': sp.exp, 'E': sp.E, 'e': sp.E, 'pi': sp.pi
+}
+
+def simp(expr):
+    try:
+        return sp.simplify(expr)
+    except Exception:
+        return expr
+
+def safe_simplify_fraction(expr):
+    try:
+        return sp.cancel(sp.together(expr))
+    except Exception:
+        return expr
+
+
+def is_zero(expr):
+    try:
+        return bool(sp.simplify(expr) == 0)
+    except Exception:
+        return expr == 0
+
+def latex_or_text(obj):
+    try:
+        return sp.latex(obj)
+    except Exception:
+        return sp.sstr(obj)
+
+def normalize_text(raw):
+    s = str(raw).strip()
+    s = re.sub(r'(?i)\brpta\.?:?', '', s)
+    s = re.sub(r'^\s*\(?\d+\)?[\.)\-:]\s*', '', s)
+
+    # Quitar condiciones al final como ", a>0, a!=1" si el usuario pegó todo el enunciado.
+    s = re.split(r'\s*,\s*(?=[A-Za-z]\s*(?:>|<|!=|≠))', s)[0]
+
+    replacements = {
+        '−': '-', '–': '-', '—': '-', '·': '*', '×': '*',
+        '[': '(', ']': ')', '{': '(', '}': ')',
+        '≠': '!='
+    }
+    for a, b in replacements.items():
+        s = s.replace(a, b)
+    s = s.replace('√', 'sqrt')
+
+    # Superíndices unicode: x² -> x^2, sen² y -> sen^2 y.
+    sup = {'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9'}
+    def sup_repl(m):
+        return m.group(1) + '^' + ''.join(sup[ch] for ch in m.group(2))
+    s = re.sub(r'([A-Za-z0-9_\)])([⁰¹²³⁴⁵⁶⁷⁸⁹]+)', sup_repl, s)
+
+    # Funciones y nombres frecuentes en español.
+    s = re.sub(r'(?i)arc\s*\.?\s*tg', 'atan', s)
+    s = re.sub(r'(?i)arctg', 'atan', s)
+    s = re.sub(r'(?i)\bcos\s*ec\b', 'csc', s)
+    s = re.sub(r'(?i)\bcosec\b', 'csc', s)
+    for pat, rep in [
+        (r'(?i)\bsen\b', 'sin'),
+        (r'(?i)\btg\b', 'tan'),
+        (r'(?i)\bctg\b', 'cot'),
+        (r'(?i)\barcsen\b', 'asin'),
+        (r'(?i)\barccos\b', 'acos'),
+        (r'(?i)\barcsin\b', 'asin'),
+        (r'(?i)\barctan\b', 'atan'),
+        (r'(?i)\bln\b', 'log'),
+    ]:
+        s = re.sub(pat, rep, s)
+
+    # Punto usado como multiplicación: tg x.sen^2 y.dx
+    s = re.sub(r'(?<=[A-Za-z0-9_\)])\s*\.\s*(?=[A-Za-z_(])', '*', s)
+
+    # Derivadas a un símbolo temporal.
+    s = re.sub(r'(?i)\bd\s*y\s*/\s*d\s*x\b', ' yp ', s)
+    s = re.sub(r"(?i)y\s*(?:'|′|’|`)", ' yp ', s)
+
+    funcs = ['sin','cos','tan','cot','sec','csc','asin','acos','atan','arctan','acot','log','sqrt','exp']
+
+    # sin^2 x -> (sin(x))**2
+    def func_power(m):
+        fn, power, arg = m.group(1), m.group(2), m.group(3).strip()
+        inner = arg[1:-1] if arg.startswith('(') and arg.endswith(')') else arg
+        return f'({fn}({inner}))**{power}'
+
+    for _ in range(6):
+        old = s
+        for fn in funcs:
+            s = re.sub(
+                rf'\b({fn})\s*\^\s*([+-]?\d+)\s*(\([^()]*\)|[A-Za-z_][A-Za-z0-9_]*|[0-9]+(?:\.[0-9]+)?)',
+                func_power, s
+            )
+        if s == old:
+            break
+
+    # tan x -> tan(x), log x -> log(x)
+    def func_wrap(m):
+        return f'{m.group(1)}({m.group(2).strip()})'
+
+    for _ in range(6):
+        old = s
+        for fn in funcs:
+            s = re.sub(
+                rf'\b({fn})\s+(\([^()]*\)|[A-Za-z_][A-Za-z0-9_]*|[0-9]+(?:\.[0-9]+)?)',
+                func_wrap, s
+            )
+        if s == old:
+            break
+
+    return s
+
+def equation_to_expression(s):
+    if '=' in s:
+        left, right = s.split('=', 1)
+        return f'({left})-({right})'
+    return s
+
+def parse_sympy(s):
+    return parse_expr(s, local_dict=LOCAL, transformations=TRANSFORMS, evaluate=True)
+
+def parse_input(raw):
+    norm = normalize_text(raw)
+
+    # Forma diferencial: M dx + N dy = 0. Se hace después de quitar dy/dx.
+    if re.search(r'(?i)\bdx\b|\bdy\b', norm):
+        tmp = re.sub(r'(?i)\bdx\b', ' DX ', norm)
+        tmp = re.sub(r'(?i)\bdy\b', ' DY ', tmp)
+        expr = parse_sympy(equation_to_expression(tmp))
+        M = simp(expr.coeff(DX))
+        N = simp(expr.coeff(DY))
+        rem = simp(expr.subs({DX: 0, DY: 0}))
+        if M != 0 or N != 0:
+            return {'kind': 'differential', 'normalized': norm, 'M': M, 'N': N, 'rem': rem}
+
+    expr = parse_sympy(equation_to_expression(norm))
+    return {'kind': 'derivative', 'normalized': norm, 'expr': expr}
+
+def exact_potential(M, N):
+    if not is_zero(sp.diff(M, y) - sp.diff(N, x)):
+        return None
+    Fx = sp.integrate(M, x)
+    gprime = simp(N - sp.diff(Fx, y))
+    g = sp.integrate(gprime, y)
+    return simp(Fx + g)
+
+def integrating_factor(M, N):
+    My, Nx = sp.diff(M, y), sp.diff(N, x)
+    if N != 0:
+        crit = simp((My - Nx) / N)
+        if not crit.has(y):
+            mu = simp(sp.exp(sp.integrate(crit, x)))
+            return mu, 'x', crit
+    if M != 0:
+        crit = simp((Nx - My) / M)
+        if not crit.has(x):
+            mu = simp(sp.exp(sp.integrate(crit, y)))
+            return mu, 'y', crit
+    return None
+
+def implicit_eq(expr):
+    return sp.Eq(simp(expr), C1)
+
+def try_linear(rhs):
+    try:
+        A = simp(sp.diff(rhs, y))
+        B = simp(rhs.subs(y, 0))
+        if not A.has(y) and not B.has(y) and is_zero(rhs - (A*y + B)):
+            # y' = A(x)y + B(x)  -> y' + P(x)y = Q(x)
+            P = simp(-A)
+            Q = simp(B)
+            mu = simp(sp.exp(sp.integrate(P, x)))
+            sol = implicit_eq(mu*y - sp.integrate(simp(mu*Q), x))
+            return sol, P, Q, mu
+    except Exception:
+        return None
+    return None
+
+def try_separable(rhs):
+    try:
+        # expand_power_exp ayuda con casos como 10^(x+y) -> 10^x 10^y.
+        rhs_sep = sp.expand_power_exp(rhs)
+        sep = sp.separatevars(rhs_sep, symbols=(x, y), dict=True, force=True)
+        if not isinstance(sep, dict):
+            return None
+
+        fx = simp(sep.get('coeff', 1) * sep.get(x, 1))
+        gy = simp(sep.get(y, 1))
+
+        if gy == 1 and not rhs_sep.has(y):
+            return sp.Eq(y, sp.integrate(rhs_sep, x) + C1), rhs_sep, sp.Integer(1)
+
+        if fx != 0 and gy != 0 and is_zero(rhs_sep - fx*gy):
+            left = sp.integrate(1/gy, y)
+            right = sp.integrate(fx, x)
+            return implicit_eq(left - right), fx, gy
+    except Exception:
+        return None
+    return None
+
+def force_homogeneous_simplify(expr, u):
+    """Simplifica expresiones tras sustituir y = u*x.
+    Usar X positivo ayuda a que sqrt(X**2*u)/X se reduzca a sqrt(u),
+    lo que aparece mucho en ejercicios homogéneos con raíces como sqrt(x*y).
+    """
+    X = sp.Symbol('X', positive=True, nonzero=True)
+    out = expr.subs({x: X, y: u*X})
+    for fn in (
+        lambda e: sp.powsimp(e, force=True),
+        lambda e: sp.powdenest(e, force=True),
+        lambda e: sp.cancel(sp.together(e)),
+        lambda e: sp.trigsimp(e),
+    ):
+        try:
+            out = fn(out)
+        except Exception:
+            pass
+    return out
+
+
+def try_homogeneous(rhs):
+    """
+    Detecta y' = F(y/x) y resuelve con la sustitución y = u*x.
+    Entonces y' = u + x*u' y queda:
+        x*du/dx = F(u) - u
+        ∫du/(F(u)-u) = ln|x| + C
+    """
+    try:
+        key = sp.sstr(rhs)
+        if key in HOMOGENEOUS_CACHE:
+            return HOMOGENEOUS_CACHE[key]
+
+        u = sp.Symbol('u')
+        F = force_homogeneous_simplify(rhs, u)
+        if F.has(x) or F.has(y) or any(str(sym) == 'X' for sym in getattr(F, 'free_symbols', set())):
+            HOMOGENEOUS_CACHE[key] = None
+            return None
+
+        denom = F - u
+        try:
+            denom = sp.trigsimp(denom)
+        except Exception:
+            pass
+        if denom == 0:
+            HOMOGENEOUS_CACHE[key] = None
+            return None
+
+        integrand = 1/denom
+        try:
+            integrand = sp.trigsimp(integrand.rewrite(sp.sin))
+        except Exception:
+            pass
+        integral = sp.integrate(integrand, u)
+        if getattr(integral, 'has', lambda *_: False)(sp.Integral):
+            HOMOGENEOUS_CACHE[key] = None
+            return None
+
+        sol_expr = integral.subs(u, y/x) - sp.log(x)
+        try:
+            sol_expr = sp.trigsimp(sol_expr)
+        except Exception:
+            pass
+        sol = implicit_eq(sol_expr)
+        result = {
+            'solution': sol,
+            'log_solution': sol,
+            'F': F,
+            'u': u,
+            'denom': denom,
+            'integral': integral,
+            'compact_multiplier': None
+        }
+        HOMOGENEOUS_CACHE[key] = result
+        return result
+    except Exception:
+        try:
+            HOMOGENEOUS_CACHE[sp.sstr(rhs)] = None
+        except Exception:
+            pass
+        return None
+
+def affine_coeffs(expr):
+    """Devuelve a,b,c si expr = a*x + b*y + c. Si no es afín, devuelve None."""
+    try:
+        poly = sp.Poly(sp.expand(expr), x, y)
+        if poly.total_degree() > 1:
+            return None
+        a = simp(poly.coeff_monomial(x))
+        b = simp(poly.coeff_monomial(y))
+        c = simp(poly.coeff_monomial(1))
+        if a == 0 and b == 0:
+            return None
+        if not is_zero(sp.expand(expr - (a*x + b*y + c))):
+            return None
+        return a, b, c
+    except Exception:
+        return None
+
+
+def compact_constant_solution(expr):
+    """Convierte rápidamente algunas formas logarítmicas en una constante algebraica."""
+    try:
+        expr2 = sp.expand_log(expr, force=True)
+        cand = sp.powsimp(sp.exp(2*expr2), force=True)
+        try:
+            cand = sp.factor(sp.cancel(cand))
+        except Exception:
+            pass
+        if cand.has(sp.log) or cand.has(sp.exp) or cand.has(sp.Integral):
+            return None
+        num, den = sp.fraction(cand)
+        if den != 1 and num != 1:
+            return sp.Eq(sp.factor(den), C1*sp.factor(num)), 2
+        return sp.Eq(cand, C1), 2
+    except Exception:
+        return None
+
+
+def try_reducible_homogeneous(rhs):
+    """
+    Resuelve y' = (a1*x+b1*y+c1)/(a2*x+b2*y+c2) cuando las rectas
+    del numerador y denominador se cortan. Con la traslación
+    X=x-h, Y=y-k queda una homogénea Y' = F(Y/X).
+    """
+    try:
+        key = sp.sstr(rhs)
+        if key in REDUCIBLE_CACHE:
+            return REDUCIBLE_CACHE[key]
+
+        num, den = sp.fraction(sp.together(rhs))
+        ncoef = affine_coeffs(num)
+        dcoef = affine_coeffs(den)
+        if not ncoef or not dcoef:
+            REDUCIBLE_CACHE[key] = None
+            return None
+
+        a1, b1, c1 = ncoef
+        a2, b2, c2 = dcoef
+        det = simp(a1*b2 - a2*b1)
+        if is_zero(det):
+            REDUCIBLE_CACHE[key] = None
+            return None
+
+        # Centro de traslación: a1*h+b1*k+c1=0, a2*h+b2*k+c2=0
+        h = simp((b1*c2 - b2*c1) / det)
+        k = simp((a2*c1 - a1*c2) / det)
+
+        z = sp.Symbol('z')
+        F = simp((a1 + b1*z) / (a2 + b2*z))
+        denom = simp(F - z)
+        if is_zero(denom):
+            REDUCIBLE_CACHE[key] = None
+            return None
+
+        integral = sp.integrate(simp(1/denom), z)
+        if getattr(integral, 'has', lambda *_: False)(sp.Integral):
+            REDUCIBLE_CACHE[key] = None
+            return None
+
+        X = simp(x - h)
+        Yt = simp(y - k)
+        sol_expr = simp(integral.subs(z, Yt/X) - sp.log(X))
+        compact = compact_constant_solution(sol_expr)
+        sol = compact[0] if compact else implicit_eq(sol_expr)
+
+        result = {
+            'solution': sol,
+            'log_solution': implicit_eq(sol_expr),
+            'compact_multiplier': compact[1] if compact else None,
+            'h': h, 'k': k,
+            'X': X, 'Y': Yt,
+            'F': F,
+            'integral': integral,
+            'num': num, 'den': den,
+            'coeffs_num': ncoef,
+            'coeffs_den': dcoef
+        }
+        REDUCIBLE_CACHE[key] = result
+        return result
+    except Exception:
+        try:
+            REDUCIBLE_CACHE[sp.sstr(rhs)] = None
+        except Exception:
+            pass
+        return None
+
+def solutions_for_rhs(rhs):
+    out = []
+
+    # Primero homogénea. Esto evita que pruebas generales se pongan lentas
+    # con raíces, csc/sec, exp(y/x), etc.
+    hom = try_homogeneous(rhs)
+    if hom:
+        out.append({
+            'method': 'Homogénea con y = u·x',
+            'solution': hom['solution'],
+            'steps': [
+                "El lado derecho depende solo de u = y/x.",
+                f"F(u) = {sp.sstr(hom['F'])}",
+                "Se usó y = u*x, por tanto y' = u + x*u'.",
+                f"Queda x*du/dx = F(u)-u = {sp.sstr(hom['denom'])}.",
+                f"Se integró ∫du/(F(u)-u) = {sp.sstr(hom['integral'])} = ln|x| + C."
+            ]
+        })
+        return out
+
+    # Reducible a homogénea por traslación de origen.
+    red = try_reducible_homogeneous(rhs)
+    if red:
+        out.append({
+            'method': 'Reducible a homogénea por traslación',
+            'solution': red['solution'],
+            'steps': [
+                "Se detectó una razón de rectas afines: y' = (a1*x+b1*y+c1)/(a2*x+b2*y+c2).",
+                f"Centro de traslación: (h, k) = ({sp.sstr(red['h'])}, {sp.sstr(red['k'])}).",
+                f"Se usó X = x - h = {sp.sstr(red['X'])}, Y = y - k = {sp.sstr(red['Y'])}.",
+                f"La ecuación queda homogénea: dY/dX = F(Y/X), con F(z) = {sp.sstr(red['F'])}.",
+                f"Se integra ∫ dz/(F(z)-z) = {sp.sstr(red['integral'])} = ln|X| + C."
+            ]
+        })
+        return out
+
+    lin = try_linear(rhs)
+    if lin:
+        sol, P, Q, mu = lin
+        out.append({
+            'method': 'Lineal de primer orden',
+            'solution': sol,
+            'steps': [
+                "Se reescribió como y' + P(x)y = Q(x).",
+                f"P(x) = {sp.sstr(P)}",
+                f"Q(x) = {sp.sstr(Q)}",
+                f"Factor integrante μ(x) = {sp.sstr(mu)}"
+            ]
+        })
+
+    sep = try_separable(rhs)
+    if sep:
+        sol, fx, gy = sep
+        out.append({
+            'method': 'Variables separables',
+            'solution': sol,
+            'steps': [
+                "Se pudo escribir como y' = f(x)g(y).",
+                f"f(x) = {sp.sstr(fx)}",
+                f"g(y) = {sp.sstr(gy)}",
+                "Se integró ∫dy/g(y) = ∫f(x)dx + C."
+            ]
+        })
+
+    return out
+
+def deduplicate(solutions):
+    seen = set()
+    clean = []
+    for item in solutions:
+        key = sp.sstr(item['solution'])
+        if key not in seen:
+            clean.append(item)
+            seen.add(key)
+    return clean
+
+def maybe_dsolve_from_rhs(rhs):
+    ode = sp.Eq(sp.diff(Y, x), rhs.subs(y, Y))
+    return sp.dsolve(ode)
+
+
+
+def solve_ode(raw, deep=False):
+    parsed = parse_input(raw)
+    notes = []
+    solutions = []
+    code = generated_python_code(raw, '', deep=deep)
+
+    code = generated_python_code(raw, parsed.get('normalized', ''), deep=deep)
+
+    if parsed['kind'] == 'differential':
+        M, N, rem = parsed['M'], parsed['N'], parsed['rem']
+        notes.append(f"Forma M dx + N dy = 0 con M={sp.sstr(M)} y N={sp.sstr(N)}.")
+        if rem != 0:
+            notes.append(f"Aviso: quedaron términos sin dx/dy: {sp.sstr(rem)}.")
+
+        # Atajo importante: si la forma diferencial equivale a una homogénea,
+        # resolver por y = u*x antes de probar exactitud evita integrales lentas
+        # con trigonometría o raíces.
+        if N != 0:
+            rhs_quick = safe_simplify_fraction(-M/N)
+            if try_homogeneous(rhs_quick) or try_reducible_homogeneous(rhs_quick):
+                code = generated_python_code(raw, parsed.get('normalized', ''), rhs=rhs_quick, M=M, N=N, deep=deep)
+                notes.append(f"Despeje automático: y' = {sp.sstr(rhs_quick)}.")
+                solutions.extend(solutions_for_rhs(rhs_quick))
+                if deep:
+                    if try_homogeneous(rhs_quick):
+                        notes.append("dsolve se omitió en este caso porque la sustitución y = u*x ya dio una solución simbólica.")
+                    else:
+                        notes.append("dsolve se omitió en este caso porque la reducción a homogénea ya dio una solución simbólica y dsolve puede tardar demasiado.")
+                solutions = deduplicate(solutions)
+                return {
+                    'ok': bool(solutions),
+                    'kind': parsed['kind'],
+                    'normalized': parsed['normalized'],
+                    'notes': notes,
+                    'solutions': solutions,
+                    'code': code
+                }
+
+        F = exact_potential(M, N)
+        if F is not None:
+            solutions.append({
+                'method': 'Exacta',
+                'solution': sp.Eq(F, C1),
+                'steps': [
+                    "Se verificó ∂M/∂y = ∂N/∂x.",
+                    "Se construyó F(x,y) integrando M respecto de x y ajustando con N.",
+                    "La solución queda F(x,y) = C."
+                ]
+            })
+        else:
+            fac = integrating_factor(M, N)
+            if fac:
+                mu, var, crit = fac
+                F2 = exact_potential(simp(mu*M), simp(mu*N))
+                if F2 is not None:
+                    solutions.append({
+                        'method': f'Exacta con factor integrante μ({var})',
+                        'solution': sp.Eq(F2, C1),
+                        'steps': [
+                            f"El criterio para factor integrante depende solo de {var}: {sp.sstr(crit)}.",
+                            f"μ({var}) = {sp.sstr(mu)}",
+                            "Tras multiplicar, la ecuación se volvió exacta."
+                        ]
+                    })
+
+        if N != 0:
+            rhs = safe_simplify_fraction(-M/N)
+            code = generated_python_code(raw, parsed.get('normalized', ''), rhs=rhs, M=M, N=N, deep=deep)
+            notes.append(f"Despeje automático: y' = {sp.sstr(rhs)}.")
+            solutions.extend(solutions_for_rhs(rhs))
+
+            if deep:
+                if try_homogeneous(rhs):
+                    notes.append("dsolve se omitió en este caso porque la sustitución y = u*x ya dio una solución simbólica.")
+                elif try_reducible_homogeneous(rhs):
+                    notes.append("dsolve se omitió en este caso porque la reducción a homogénea ya dio una solución simbólica y dsolve puede tardar demasiado.")
+                else:
+                    try:
+                        ds = maybe_dsolve_from_rhs(rhs)
+                        solutions.append({
+                            'method': 'SymPy dsolve',
+                            'solution': ds,
+                            'steps': ["Se usó dsolve como respaldo profundo."]
+                        })
+                    except Exception as err:
+                        notes.append("dsolve no encontró una forma cerrada: " + str(err)[:220])
+
+    else:
+        expr = parsed['expr']
+        if expr.has(yp):
+            try:
+                derivatives = sp.solve(sp.Eq(expr, 0), yp)
+            except Exception:
+                try:
+                    derivatives = sp.solve(expr, yp)
+                except Exception:
+                    derivatives = []
+
+            if derivatives:
+                for index_rhs, rhs in enumerate(derivatives[:4]):
+                    rhs = simp(rhs)
+                    if index_rhs == 0:
+                        code = generated_python_code(raw, parsed.get('normalized', ''), rhs=rhs, deep=deep)
+                    notes.append(f"Despeje automático: y' = {sp.sstr(rhs)}.")
+                    solutions.extend(solutions_for_rhs(rhs))
+
+                    if deep:
+                        if try_homogeneous(rhs):
+                            notes.append("dsolve se omitió en este caso porque la sustitución y = u*x ya dio una solución simbólica.")
+                        elif try_reducible_homogeneous(rhs):
+                            notes.append("dsolve se omitió en este caso porque la reducción a homogénea ya dio una solución simbólica y dsolve puede tardar demasiado.")
+                        else:
+                            try:
+                                ds = maybe_dsolve_from_rhs(rhs)
+                                solutions.append({
+                                    'method': 'SymPy dsolve',
+                                    'solution': ds,
+                                    'steps': ["Se usó dsolve como respaldo profundo."]
+                                })
+                            except Exception as err:
+                                notes.append("dsolve no encontró una forma cerrada: " + str(err)[:220])
+            else:
+                notes.append("No se pudo despejar y' directamente.")
+
+            if any(item.get('method', '').startswith('Homogénea') or item.get('method', '').startswith('Reducible') for item in solutions):
+                solutions = deduplicate(solutions)
+                return {
+                    'ok': bool(solutions),
+                    'kind': parsed['kind'],
+                    'normalized': parsed['normalized'],
+                    'notes': notes,
+                    'solutions': solutions,
+                    'code': code
+                }
+
+            # Si expr = A*y' + B, entonces B dx + A dy = 0.
+            A = simp(expr.coeff(yp))
+            B = simp(expr.subs(yp, 0))
+            if A != 0:
+                F = exact_potential(B, A)
+                if F is not None:
+                    solutions.append({
+                        'method': 'Exacta tras convertir a M dx + N dy = 0',
+                        'solution': sp.Eq(F, C1),
+                        'steps': [
+                            "Se tomó M=B y N=A desde la forma A(x,y)y' + B(x,y)=0.",
+                            "Se verificó exactitud y se integró."
+                        ]
+                    })
+                else:
+                    fac = integrating_factor(B, A)
+                    if fac:
+                        mu, var, crit = fac
+                        F2 = exact_potential(simp(mu*B), simp(mu*A))
+                        if F2 is not None:
+                            solutions.append({
+                                'method': f'Factor integrante μ({var})',
+                                'solution': sp.Eq(F2, C1),
+                                'steps': [
+                                    f"Se tomó M=B, N=A y se halló μ({var})={sp.sstr(mu)}.",
+                                    "Después de multiplicar por μ, se integró como exacta."
+                                ]
+                            })
+        else:
+            # Intento final: una igualdad sin y' puede ser una solución implícita o una ecuación algebraica.
+            notes.append("No se detectó y' ni dy/dx. Escribe una EDO de primer orden o una forma con dx,dy.")
+
+    solutions = deduplicate(solutions)
+
+    return {
+        'ok': bool(solutions),
+        'kind': parsed['kind'],
+        'normalized': parsed['normalized'],
+        'notes': notes,
+        'solutions': solutions,
+        'code': code
+    }
+
+
+def generated_python_code(raw, normalized='', rhs=None, M=None, N=None, deep=False):
+    """
+    Genera código Python copiable usando SOLO la forma normalizada/simbólica.
+    No vuelve a interpretar la entrada original del usuario.
+    """
+    exprs = []
+    if rhs is not None:
+        exprs.append(rhs)
+    if M is not None:
+        exprs.append(M)
+    if N is not None:
+        exprs.append(N)
+
+    excluded = {'x', 'y', 'yp', 'DX', 'DY'}
+    params = sorted({str(sym) for expr in exprs for sym in getattr(expr, 'free_symbols', set()) if str(sym) not in excluded})
+
+    def symbol_line(names):
+        if not names:
+            return ''
+        if len(names) == 1:
+            return f"{names[0]} = sp.symbols('{names[0]}')\n"
+        return f"{', '.join(names)} = sp.symbols('{ ' '.join(names) }')\n"
+
+    def expr_code(expr):
+        # sp.sstr produce expresiones tipo Python/SymPy: x**2, sin(x), log(x).
+        # No se simplifica aquí para evitar bloqueos con trigonometría/raíces largas.
+        return sp.sstr(expr)
+
+    import_line = (
+        "from sympy import sin, cos, tan, cot, sec, csc, asin, acos, atan, acot, sqrt, log, exp, E, pi\n"
+    )
+
+    head = (
+        "# Código generado para reproducir el cálculo\n"
+        "# La entrada ya fue normalizada por la página.\n"
+        + ("# Normalizada: " + str(normalized).replace('\n', ' ') + "\n" if normalized else "") +
+        "import sympy as sp\n" +
+        import_line +
+        "\n"
+        "x, y = sp.symbols('x y')\n" +
+        symbol_line(params) +
+        "Y = sp.Function('y')\n"
+        "C1 = sp.symbols('C1')\n\n"
+    )
+
+    if rhs is not None:
+        rhs_text = expr_code(rhs)
+        hom = try_homogeneous(rhs)
+        red = None if hom else try_reducible_homogeneous(rhs)
+        mode = "# Resolver con SymPy dsolve\n" if deep else "# dsolve listo para validar o profundizar la solución\n"
+        base = (
+            "# Ecuación normalizada y despejada:\n"
+            f"# y' = {rhs_text}\n"
+            f"rhs_xy = sp.simplify({rhs_text})\n"
+            "ode = sp.Eq(sp.diff(Y(x), x), rhs_xy.subs(y, Y(x)))\n\n"
+        )
+        if hom:
+            return head + base + (
+                "# Caso detectado: homogénea de primer orden\n"
+                "# Sustitución: y = u*x, entonces y' = u + x*du/dx\n"
+                "u = sp.symbols('u')\n"
+                f"F = sp.simplify({expr_code(hom['F'])})\n"
+                "denom = sp.simplify(F - u)\n"
+                "integrand = sp.trigsimp((1/denom).rewrite(sp.sin))\n"
+                "I = sp.integrate(integrand, u)\n"
+                "implicit = sp.Eq(I.subs(u, y/x) - sp.log(x), C1)\n"
+                "print('Solución por y = u*x:')\n"
+                "print(implicit)\n"
+            )
+        if red:
+            return head + base + (
+                "# Caso detectado: reducible a homogénea por traslación\n"
+                f"h = sp.simplify({expr_code(red['h'])})\n"
+                f"k = sp.simplify({expr_code(red['k'])})\n"
+                "X = x - h\n"
+                "Y_shift = y - k\n"
+                "z = sp.symbols('z')\n"
+                f"F = sp.simplify({expr_code(red['F'])})\n"
+                "I = sp.integrate(1/(F - z), z)\n"
+                "implicit = sp.Eq(I.subs(z, Y_shift/X) - sp.log(X), C1)\n"
+                "print('Solución por reducción a homogénea:')\n"
+                "print(implicit)\n\n"
+                + mode +
+                "sol_dsolve = sp.dsolve(ode)\n"
+                "print('Validación dsolve:')\n"
+                "print(sol_dsolve)\n"
+            )
+        return head + base + (
+            mode +
+            "sol = sp.dsolve(ode)\n"
+            "print(sol)\n"
+        )
+
+    if M is not None and N is not None:
+        M_text = expr_code(M)
+        N_text = expr_code(N)
+        rhs_text = expr_code(safe_simplify_fraction(-M/N))
+        return head + (
+            "# Forma diferencial normalizada: M dx + N dy = 0\n"
+            f"M = sp.simplify({M_text})\n"
+            f"N = sp.simplify({N_text})\n"
+            f"rhs_xy = sp.simplify({rhs_text})\n"
+            "ode = sp.Eq(sp.diff(Y(x), x), rhs_xy.subs(y, Y(x)))\n\n"
+            "sol = sp.dsolve(ode)\n"
+            "print(sol)\n"
+        )
+
+    return head + "# No se pudo generar una forma normalizada y' = f(x, y) para dsolve.\n"
+
+def solve_ode_json(raw, deep=False):
+    try:
+        ans = solve_ode(raw, bool(deep))
+        payload = {
+            'ok': ans['ok'],
+            'kind': ans.get('kind', ''),
+            'normalized': ans.get('normalized', ''),
+            'notes': ans.get('notes', []),
+            'solutions': [],
+            'code': ans.get('code', '')
+        }
+        for item in ans.get('solutions', []):
+            payload['solutions'].append({
+                'method': item['method'],
+                'latex': latex_or_text(item['solution']),
+                'text': sp.sstr(item['solution']),
+                'steps': item.get('steps', [])
+            })
+        if not payload['ok']:
+            payload['error'] = 'No encontré una solución simbólica automática para esta forma.'
+        return json.dumps(payload, ensure_ascii=False)
+    except Exception as err:
+        return json.dumps({
+            'ok': False,
+            'error': str(err),
+            'trace': traceback.format_exc(limit=8),
+            'code': generated_python_code(raw, '')
+        }, ensure_ascii=False)
+</script>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const equation = $('equation');
+  const output = $('output');
+  const statusBox = $('status');
+  const engineBadge = $('engineBadge');
+  const solveBtn = $('solveBtn');
+  const clearBtn = $('clearBtn');
+  const copyBtn = $('copyBtn');
+  const copyCodeBtn = $('copyCodeBtn');
+  const pythonPreview = $('pythonPreview');
+  const exportMdBtn = $('exportMdBtn');
+  const exportPdfBtn = $('exportPdfBtn');
+  const clearHistoryBtn = $('clearHistoryBtn');
+  const historyList = $('historyList');
+  const autoSolve = $('autoSolve');
+  const deepSolve = $('deepSolve');
+  const showText = $('showText');
+  const timeoutSelect = $('timeout');
+
+  let worker = null;
+  let ready = false;
+  let solving = false;
+  let requestId = 0;
+  let activeTimer = null;
+  let debounceTimer = null;
+  let lastPlain = '';
+  let lastCode = '';
+  let lastResultData = null;
+  const HISTORY_KEY = 'edo_solver_history_v2';
+
+  function escapeHtml(value){
+    return String(value ?? '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'","&#039;");
+  }
+
+  function setStatus(kind, text){
+    statusBox.className = 'status ' + (kind || '');
+    statusBox.querySelector('span:last-child').innerHTML = text;
+    if(kind === 'ready') engineBadge.textContent = 'SymPy listo';
+    else if(kind === 'error') engineBadge.textContent = 'requiere reinicio';
+    else engineBadge.textContent = 'SymPy…';
+  }
+
+  function renderMath(){
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([output]).catch(() => {});
+    }
+  }
+
+  function renderEmpty(message){
+    output.className = 'result-empty';
+    output.innerHTML = message;
+  }
+
+  function updatePythonPreview(code){
+    lastCode = code || '# Aquí aparecerá el código usado con SymPy / dsolve';
+    if(pythonPreview) pythonPreview.textContent = lastCode;
+  }
+
+
+  function friendlyTips(input, technical){
+    const tips = [];
+    const open = (input.match(/\(/g) || []).length;
+    const close = (input.match(/\)/g) || []).length;
+    if(open !== close) tips.push('Revisa parentesis: parece que falta abrir o cerrar uno.');
+    if(/\b(sen|tg|ctg|ln)\s*\^/.test(input)) tips.push('Para potencias trigonométricas puedes usar sen^2 x, tg^2 x o escribir (sen x)^2.');
+    if(/\d+[a-zA-Z]|[a-zA-Z]\d+/.test(input)) tips.push('La multiplicacion implicita funciona, pero si falla prueba escribir *: 2*x, x*y, 3*e^x.');
+    if(!/(y\s*(?:'|′|’|`)|dy\s*\/\s*dx|\bdx\b|\bdy\b)/i.test(input)) tips.push('No detecte derivada. Usa y\', dy/dx o forma M dx + N dy = 0.');
+    if(/log|ln/i.test(input) && !/[a-z]+\s*\(/i.test(input)) tips.push('Para logaritmos complicados prueba ln(x) o log(x).');
+    if(/unsupported|parse|token|SyntaxError|invalid/i.test(technical || '')) tips.push('Puede ser sintaxis. Ejemplo valido: sqrt(1+x^3) dy/dx = x^2*y + x^2.');
+    if(!tips.length) tips.push('Prueba activar/desactivar dsolve, aumentar el limite o escribir la ecuacion como y\' = f(x,y).');
+    return `<div class="friendly"><strong>Sugerencias:</strong><br>${tips.map(t => '• ' + escapeHtml(t)).join('<br>')}</div>`;
+  }
+
+  function readHistory(){
+    try{return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');}
+    catch{return [];}
+  }
+
+  function writeHistory(items){
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(items.slice(0, 12)));
+    renderHistory();
+  }
+
+  function saveHistory(data){
+    const eq = equation.value.trim();
+    if(!eq || !data || !data.ok) return;
+    const items = readHistory().filter(item => item.eq !== eq);
+    items.unshift({eq, when: new Date().toLocaleString(), method: data.solutions?.[0]?.method || 'SymPy'});
+    writeHistory(items);
+  }
+
+  function renderHistory(){
+    if(!historyList) return;
+    const items = readHistory();
+    if(!items.length){
+      historyList.innerHTML = '<span class="history-empty">Sin historial.</span>';
+      return;
+    }
+    historyList.innerHTML = items.map((item, i) => `<button class="history-item" data-history-index="${i}">${escapeHtml(item.eq)}<small>${escapeHtml(item.method)} · ${escapeHtml(item.when)}</small></button>`).join('');
+    historyList.querySelectorAll('[data-history-index]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = readHistory()[Number(btn.dataset.historyIndex)];
+        if(!item) return;
+        equation.value = item.eq;
+        equation.focus();
+        solveNow();
+      });
+    });
+  }
+
+  function downloadText(filename, text, mime='text/plain'){
+    const blob = new Blob([text], {type: mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  }
+
+  function exportMarkdown(){
+    const data = lastResultData;
+    const eq = equation.value.trim();
+    const lines = [];
+    lines.push('# Reporte EDO Solver');
+    lines.push('');
+    lines.push('## Entrada');
+    lines.push('```text');
+    lines.push(eq || '(sin entrada)');
+    lines.push('```');
+    if(data){
+      lines.push('');
+      lines.push('## Normalizada');
+      lines.push('```text');
+      lines.push(data.normalized || '');
+      lines.push('```');
+      if(data.notes?.length){
+        lines.push(''); lines.push('## Pasos');
+        data.notes.forEach(n => lines.push('- ' + n));
+      }
+      if(data.solutions?.length){
+        lines.push(''); lines.push('## Soluciones');
+        data.solutions.forEach((s, i) => {
+          lines.push(`### ${i+1}. ${s.method}`);
+          lines.push('```text');
+          lines.push(s.text || '');
+          lines.push('```');
+          if(s.steps?.length) s.steps.forEach(step => lines.push('- ' + step));
+        });
+      }
+      if(data.code){
+        lines.push(''); lines.push('## Codigo Python generado');
+        lines.push('```python');
+        lines.push(data.code);
+        lines.push('```');
+      }
+    }
+    downloadText('reporte_edo_solver.md', lines.join('\n'), 'text/markdown');
+  }
+
+  function renderResult(data){
+    output.className = '';
+    lastResultData = data || null;
+    updatePythonPreview(data?.code || '');
+    if(!data || !data.ok){
+      const trace = data && data.trace ? `<details><summary>Detalle técnico</summary><pre>${escapeHtml(data.trace)}</pre></details>` : '';
+      output.innerHTML = `
+        <div class="solution">
+          <div class="method"><strong>No se pudo resolver automáticamente</strong><span>revisar entrada</span></div>
+          <p class="notice">${escapeHtml(data?.error || 'Error desconocido.')}</p>
+          ${friendlyTips(equation.value, data?.error || data?.trace || '')}
+          ${trace}
+        </div>`;
+      lastPlain = data?.error || '';
+      if(data?.code) updatePythonPreview(data.code);
+      renderMath();
+      return;
+    }
+
+    const notes = (data.notes || []).map(n => `<li>${escapeHtml(n)}</li>`).join('');
+    const solutions = (data.solutions || []).slice(0, 8).map((item, index) => {
+      const steps = (item.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join('');
+      const plain = showText.checked ? `<details><summary>Texto plano de SymPy</summary><pre>${escapeHtml(item.text)}</pre></details>` : '';
+      return `
+        <article class="solution">
+          <div class="method"><strong>${escapeHtml(item.method)}</strong><span>solución ${index + 1}</span></div>
+          <div class="math">\\[${item.latex}\\]</div>
+          ${steps ? `<ol class="steps">${steps}</ol>` : ''}
+          ${plain}
+        </article>`;
+    }).join('');
+
+    output.innerHTML = `
+      <div class="normalized"><strong>Entrada normalizada:</strong> ${escapeHtml(data.normalized || '')}</div>
+      ${notes ? `<ol class="steps">${notes}</ol>` : ''}
+      ${solutions}
+    `;
+
+    lastPlain = [
+      'Entrada normalizada: ' + (data.normalized || ''),
+      ...(data.notes || []),
+      ...(data.solutions || []).map(s => `${s.method}: ${s.text}`)
+    ].join('\n');
+
+    saveHistory(data);
+    renderMath();
+  }
+
+  function startWorker(){
+    ready = false;
+    solving = false;
+    solveBtn.disabled = true;
+    setStatus('', 'Cargando SymPy…');
+
+    if(worker) worker.terminate();
+
+    const workerSource = `
+      let pyodide = null;
+      let initialized = false;
+
+      self.onmessage = async (event) => {
+        const msg = event.data || {};
+        if(msg.type === 'init'){
+          try{
+            importScripts('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
+            pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+            await pyodide.loadPackage(['sympy']);
+            pyodide.runPython(msg.pythonCode);
+            initialized = true;
+            self.postMessage({ type:'ready' });
+          }catch(error){
+            self.postMessage({ type:'init-error', error: String(error && error.message ? error.message : error) });
+          }
+          return;
+        }
+
+        if(msg.type === 'solve'){
+          if(!initialized){
+            self.postMessage({ type:'result', id: msg.id, result: { ok:false, error:'El motor todavía no está listo.' } });
+            return;
+          }
+          try{
+            const fn = pyodide.globals.get('solve_ode_json');
+            const raw = fn(msg.input, Boolean(msg.deep));
+            if(fn && fn.destroy) fn.destroy();
+            self.postMessage({ type:'result', id: msg.id, result: JSON.parse(raw) });
+          }catch(error){
+            self.postMessage({
+              type:'result',
+              id: msg.id,
+              result: { ok:false, error: String(error && error.message ? error.message : error) }
+            });
+          }
+        }
+      };
+    `;
+
+    const blob = new Blob([workerSource], { type: 'text/javascript' });
+    worker = new Worker(URL.createObjectURL(blob));
+
+    worker.onmessage = (event) => {
+      const msg = event.data || {};
+      if(msg.type === 'ready'){
+        ready = true;
+        solveBtn.disabled = false;
+        setStatus('ready', 'SymPy listo. dsolve activo.');
+        if(equation.value.trim() && autoSolve.checked) scheduleSolve(250);
+        return;
+      }
+
+      if(msg.type === 'init-error'){
+        ready = false;
+        solveBtn.disabled = true;
+        setStatus('error', 'No se pudo cargar Pyodide/SymPy. Revisa tu conexión a internet.');
+        renderEmpty(`<strong>Error al cargar el motor:</strong><br>${escapeHtml(msg.error)}`);
+        return;
+      }
+
+      if(msg.type === 'result' && msg.id === requestId){
+        clearTimeout(activeTimer);
+        activeTimer = null;
+        solving = false;
+        solveBtn.disabled = false;
+        setStatus('ready', 'Resultado calculado con SymPy.');
+        renderResult(msg.result);
+      }
+    };
+
+    worker.onerror = (error) => {
+      ready = false;
+      solving = false;
+      solveBtn.disabled = true;
+      setStatus('error', 'Error del Worker. Se reiniciará el motor.');
+      renderEmpty(`<strong>Error del motor:</strong><br>${escapeHtml(error.message || error)}`);
+      setTimeout(startWorker, 700);
+    };
+
+    worker.postMessage({
+      type: 'init',
+      pythonCode: document.getElementById('python-code').textContent
+    });
+  }
+
+  function solveNow(){
+    const input = equation.value.trim();
+    if(!input){
+      renderEmpty('Escribe una ecuación.');
+      updatePythonPreview('');
+      return;
+    }
+    if(!ready){
+      renderEmpty('El motor simbólico todavía está cargando. La ecuación se resolverá cuando esté listo.');
+      return;
+    }
+
+    requestId += 1;
+    solving = true;
+    solveBtn.disabled = true;
+    setStatus('', 'Calculando solución simbólica…');
+    output.className = 'result-empty';
+    output.innerHTML = 'Resolviendo…';
+    updatePythonPreview('# Generando código Python para SymPy / dsolve...');
+
+    const currentId = requestId;
+    const limit = Number(timeoutSelect.value || 12000);
+
+    clearTimeout(activeTimer);
+    activeTimer = setTimeout(() => {
+      if(currentId !== requestId) return;
+      solving = false;
+      ready = false;
+      if(worker) worker.terminate();
+      setStatus('error', 'El cálculo excedió el tiempo límite y fue detenido. Reiniciando motor…');
+      renderEmpty('El cálculo tardó demasiado. Prueba aumentar el tiempo límite, simplificar la entrada o desactivar el modo profundo.');
+      setTimeout(startWorker, 300);
+    }, limit);
+
+    worker.postMessage({
+      type:'solve',
+      id: currentId,
+      input,
+      deep: deepSolve.checked
+    });
+  }
+
+  function scheduleSolve(delay = 900){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      if(autoSolve.checked && ready && !solving && equation.value.trim().length > 2){
+        solveNow();
+      }
+    }, delay);
+  }
+
+  solveBtn.addEventListener('click', solveNow);
+  clearBtn.addEventListener('click', () => {
+    equation.value = '';
+    lastPlain = '';
+    renderEmpty('Listo.');
+    lastResultData = null;
+    updatePythonPreview('');
+    equation.focus();
+  });
+  copyBtn.addEventListener('click', async () => {
+    const text = lastPlain || output.innerText || '';
+    if(!text.trim()) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = 'Copiado';
+      setTimeout(() => copyBtn.textContent = 'Copiar', 1100);
+    }catch{
+      copyBtn.textContent = 'No se pudo';
+      setTimeout(() => copyBtn.textContent = 'Copiar', 1400);
+    }
+  });
+
+  if(copyCodeBtn){
+    copyCodeBtn.addEventListener('click', async () => {
+      const text = lastCode || pythonPreview?.textContent || '';
+      if(!text.trim()) return;
+      try{
+        await navigator.clipboard.writeText(text);
+        copyCodeBtn.textContent = 'Copiado';
+        setTimeout(() => copyCodeBtn.textContent = 'Copiar código', 1100);
+      }catch{
+        copyCodeBtn.textContent = 'No se pudo';
+        setTimeout(() => copyCodeBtn.textContent = 'Copiar código', 1400);
+      }
+    });
+  }
+
+
+  if(exportMdBtn) exportMdBtn.addEventListener('click', exportMarkdown);
+  if(exportPdfBtn) exportPdfBtn.addEventListener('click', () => window.print());
+  if(clearHistoryBtn) clearHistoryBtn.addEventListener('click', () => writeHistory([]));
+
+
+  equation.addEventListener('input', () => scheduleSolve());
+  deepSolve.addEventListener('change', () => scheduleSolve(150));
+  showText.addEventListener('change', () => {
+    if(equation.value.trim() && ready) solveNow();
+  });
+  document.querySelectorAll('[data-example]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      equation.value = btn.getAttribute('data-example');
+      equation.focus();
+      solveNow();
+    });
+  });
+
+  equation.value = "xy' - y = y^3";
+  renderHistory();
+  startWorker();
+})();
+</script>
+</body>
+</html>
