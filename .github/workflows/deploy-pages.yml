@@ -1,0 +1,131 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+# Pyodide version used by index.html (loadPyodide / loadPackage calls).
+# Update this together with the pyodideBase path in index.html if upgrading.
+env:
+  PYODIDE_VERSION: "0.26.4"
+  # Packages that must match the loadPackage([...]) call in index.html (~line 1436).
+  PYODIDE_PACKAGES: "sympy"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Pyodide core runtime
+        run: |
+          BASE_URL="https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full"
+          mkdir -p _site/pyodide
+
+          echo "Downloading Pyodide core files from $BASE_URL"
+          for file in pyodide.js pyodide.asm.js pyodide.asm.wasm python_stdlib.zip pyodide-lock.json; do
+            echo -n "  $file ... "
+            curl -sSL --retry 3 --fail -o "_site/pyodide/$file" "$BASE_URL/$file"
+            echo "$(du -h "_site/pyodide/$file" | cut -f1)"
+          done
+
+      - name: Download SymPy and its dependencies
+        run: |
+          python3 - <<'EOF'
+          import json, subprocess, os, sys
+
+          lock_path = '_site/pyodide/pyodide-lock.json'
+          with open(lock_path) as f:
+              lock = json.load(f)
+
+          packages = lock.get('packages', {})
+
+          # Root packages come from the PYODIDE_PACKAGES env var so they stay
+          # in sync with the loadPackage([...]) call in index.html.
+          roots = [p.strip() for p in os.environ['PYODIDE_PACKAGES'].split(',') if p.strip()]
+
+          # Resolve transitive dependencies
+          to_process = list(roots)
+          to_download = []
+          visited = set()
+          while to_process:
+              name = to_process.pop()
+              if name in visited:
+                  continue
+              visited.add(name)
+              pkg = packages.get(name)
+              if not pkg:
+                  print(f'  WARNING: package "{name}" not in lock file, skipping')
+                  continue
+              to_download.append(name)
+              for dep in pkg.get('depends', []):
+                  if dep not in visited:
+                      to_process.append(dep)
+
+          base_url = os.environ['BASE_URL']
+          print(f'Packages to download: {", ".join(sorted(to_download))}')
+          errors = []
+          for pkg_name in sorted(to_download):
+              pkg = packages[pkg_name]
+              file_name = pkg['file_name']
+              url = f"{base_url}/{file_name}"
+              dest = f"_site/pyodide/{file_name}"
+              print(f'  {pkg_name} ({file_name}) ... ', end='', flush=True)
+              result = subprocess.run(
+                  ['curl', '-sSL', '--retry', '3', '--fail', '-o', dest, url],
+                  capture_output=True, text=True
+              )
+              if result.returncode != 0:
+                  msg = f'FAILED: {result.stderr.strip()}'
+                  print(msg)
+                  errors.append(f'{pkg_name}: {msg}')
+              else:
+                  size = os.path.getsize(dest)
+                  print(f'OK ({size:,} bytes)')
+
+          if errors:
+              print('\nErrors:')
+              for e in errors:
+                  print(f'  {e}')
+              sys.exit(1)
+          EOF
+        env:
+          BASE_URL: "https://cdn.jsdelivr.net/pyodide/v${{ env.PYODIDE_VERSION }}/full"
+
+      - name: Copy static site files
+        run: |
+          cp index.html _site/
+          [ -f CNAME ] && cp CNAME _site/ || true
+          echo "Site contents:"
+          du -sh _site/pyodide/* | sort -h | tail -20
+          echo "Total pyodide/ size: $(du -sh _site/pyodide | cut -f1)"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

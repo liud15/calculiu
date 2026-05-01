@@ -1431,8 +1431,8 @@ def solve_ode_json(raw, deep=False):
         const msg = event.data || {};
         if(msg.type === 'init'){
           try{
-            importScripts('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
-            pyodide = await loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/' });
+            importScripts(msg.pyodideBase + 'pyodide.js');
+            pyodide = await loadPyodide({ indexURL: msg.pyodideBase });
             await pyodide.loadPackage(['sympy']);
             pyodide.runPython(msg.pythonCode);
             initialized = true;
@@ -1506,7 +1506,8 @@ def solve_ode_json(raw, deep=False):
 
     worker.postMessage({
       type: 'init',
-      pythonCode: document.getElementById('python-code').textContent
+      pythonCode: document.getElementById('python-code').textContent,
+      pyodideBase: window.location.origin + '/pyodide/'
     });
   }
 
